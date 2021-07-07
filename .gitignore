@@ -6,4 +6,6 @@ MP/data/
 generated/JDOS/data/
 experimental/data_SnO2/
 
+*.ipynb
+
 
