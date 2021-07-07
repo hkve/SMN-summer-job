@@ -7,5 +7,6 @@ generated/JDOS/data/
 experimental/data_SnO2/
 
 *.ipynb
+experimental/.ipynb_checkpoints/
 
 
