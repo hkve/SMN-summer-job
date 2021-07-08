@@ -4,7 +4,7 @@ __pycache__/
 
 MP/data/
 generated/JDOS/data/
-experimental/data_SnO2/
+experimental/SnO2_data/
 
 *.ipynb
 experimental/.ipynb_checkpoints/

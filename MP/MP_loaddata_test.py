@@ -38,7 +38,7 @@ bs = mpr.get_bandstructure_by_material_id("mp-2133")
 #bs = load_structure("test.json")
 
 
-plot_brillouin(bs)
+#plot_brillouin(bs)
 plot_bandstructure(bs)
 """
 #bs is BandStructure object: https://pymatgen.org/pymatgen.electronic_structure.bandstructure.html
