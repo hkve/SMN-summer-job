@@ -33,22 +33,22 @@ def trim_data(trim, E, intensity):
 
 def plot_fit(ax, E, fit_opt, fit_cov, trim_idx, color):
 	bandgap, bandgap_coef = fit_opt[0], fit_cov[0,0]
-	print(f"bandgap = {bandgap:.2f} eV, bangap coef = {bandgap_coef:.2e} eV")
 	intensity = func_plot(E, *fit_opt)
 
 	start, end = trim_idx
 	zero = np.argmin(abs(fit_opt[0]-E))
 
+	print(f"bandgap = {bandgap:.2f} eV, bangap coef = {bandgap_coef:.2e} eV, on energy range = ({E[start]:.2f} eV,{E[end]:.2f} eV)")
 	ax.plot(E[:zero], intensity[:zero], c="gray", ls="--", lw=2)
 	ax.plot(E[zero:start+1], intensity[zero:start+1], c=color, ls="--", lw=2)
-	ax.plot(E[start:end+1], intensity[start:end+1], c=color, lw=2)
+	ax.plot(E[start:end+1], intensity[start:end+1], c=color, lw=2, label=f"$E_g=${bandgap:.2f} eV")
 	ax.plot(E[end:], intensity[end:], c=color, ls="--", lw=2)
 
 def plot_data(E, intensity_smooth, fit_opt, fit_cov, trim_idx):
 	fig, ax = plt.subplots()
 	ax.plot(E, intensity_smooth, c="r")	
 
-	plot_fit(ax, E, fit_opt, fit_cov, trim_idx, "green")
+	
 	
 	ax.set_xlabel("Energy difference (eV)", fontsize=12)
 	ax.set_ylabel("Norm intensity", fontsize=12)
@@ -59,20 +59,34 @@ def normalize(intensity):
 
 #E, intensity = load_data("SnO2_data/Text files for 001 direction/0.1-0.2.msa")
 
-
-smoothing_window = 31
-order = 2
-
-intensity_smooth = savgol_filter(intensity, window_length=smoothing_window, polyorder=order)
-intensity_smooth = normalize(intensity_smooth)
-
-E_trim, intensity_smooth_trim, trim_idx = trim_data((3,4), E, intensity_smooth)
+def savgol_smooth(intensity, window_length, order=2):
+	return savgol_filter(intensity, window_length=window_length, polyorder=order)
 
 
-fit_opt, fit_cov = curve_fit(func, E_trim, intensity_smooth_trim)
-
-plot_data(E, intensity_smooth, fit_opt, fit_cov, trim_idx)
 
 if __name__ == "__main__":
 	E, intensity = load_data("SnO2_data/Text files for 001 direction/0-0.1 A.msa")
 	
+	intensity = normalize(intensity)
+	intensity_smooth = savgol_smooth(intensity, 21)
+
+	E_trim1, intensity_trim1, trim_idx1 = trim_data((3,4), E, intensity_smooth)
+	fit_opt1, fit_cov1 = curve_fit(func, E_trim1, intensity_trim1)
+	
+	E_trim2, intensity_trim2, trim_idx2 = trim_data((4.7,5.5), E, intensity_smooth)
+	fit_opt2, fit_cov2 = curve_fit(func, E_trim2, intensity_trim2)
+	
+	fig, ax = plt.subplots(nrows=1, ncols=2)
+	
+	ax[0].plot(E, intensity, c="r", label="Raw spectrum")
+	ax[1].plot(E, intensity_smooth, c="r", label="Smoothed spectrum")	
+
+	plot_fit(ax[1], E, fit_opt1, fit_cov1, trim_idx1, "green")
+	plot_fit(ax[1], E, fit_opt2, fit_cov2, trim_idx2, "blue")
+
+	ax[1].set_xlabel("Energy difference (eV)", fontsize=12)
+	ax[0].set_xlabel("Energy difference (eV)", fontsize=12)
+	ax[0].set_ylabel("Normalized intensity", fontsize=12)
+	ax[0].legend()
+	ax[1].legend(loc=2)
+	plt.show()
