@@ -50,8 +50,8 @@ def plot_schuster_M_K(run=False):
 	print(jdos)
 	
 	#plot_waterfall(Q, E, J, [0.1,0.5,0.7])
-	plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
-	#plot_integrated_density(*jdos.integrated_density())
+	#plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
+	plot_integrated_density(*jdos.integrated_density())
 
 
 if __name__ == "__main__":

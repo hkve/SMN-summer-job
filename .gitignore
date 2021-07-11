@@ -3,6 +3,7 @@ sandkasser/
 __pycache__/
 
 MP/data/
+MP/api_key.txt
 generated/JDOS/data/
 experimental/SnO2_data/
 

@@ -1,12 +1,11 @@
-from matminer.data_retrieval.retrieve_MP import MPDataRetrieval # Not needed?
 from pymatgen.ext.matproj import MPRester
 from pymatgen.electronic_structure.plotter import BSPlotter
 from pymatgen.electronic_structure.bandstructure import BandStructure, BandStructureSymmLine
 
 import json as json
 
-#df_mp = MPDataRetrieval("QWSjiHanJdjCjxyr").get_dataframe(criteria='Si', properties=['band_structure'])
-#print(df_mp)
+with open("api_key.txt") as f: API_KEY = f.readline()
+
 
 def plot_brillouin(bs):
 	BSPlotter(bs).plot_brillouin()
@@ -30,6 +29,8 @@ def load_structure(filename):
 		bs = BandStructureSymmLine.from_dict(d)
 
 	return bs
+
+
 mpr = MPRester("QWSjiHanJdjCjxyr")
 bs = mpr.get_bandstructure_by_material_id("mp-2133")
 """
