@@ -10,11 +10,11 @@ def plot_bandstructure(bs):
 
 if __name__ == "__main__":
 	#BandStructureSymmLine object: https://pymatgen.org/pymatgen.electronic_structure.bandstructure.html
-	#bs_ZnO = load_structure("data/ZnO.json")
-	bs_SnO2 = load_structure("data/SnO2.json")
+	bs_ZnO = load_structure("data/ZnO.json")
 
-	bs_SnO2 = bs_SnO2.apply_scissor(new_band_gap=3) # Move CBM
+	#bs_SnO2 = load_structure("data/SnO2.json")
+	#bs_SnO2 = bs_SnO2.apply_scissor(new_band_gap=3) # Move CBM
 	
-	plot_brillouin(bs_SnO2)
+	plot_brillouin(bs_ZnO)
 
-	plot_bandstructure(bs_SnO2)
+	#plot_bandstructure(bs_SnO2)
