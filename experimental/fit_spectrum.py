@@ -14,15 +14,26 @@ def load_data(filename):
 
 	return np.array(E), np.array(intensity)
 
-def func(E, bandgap, A):
+def fit_1_2(E, bandgap, A):
 	return A*np.sqrt(E-bandgap)
 
-def func_plot(E, bandgap, A):
+def fit_3_2(E, bandgap, A):
+	return A*(E-bandgap)**1.5
+
+def plot_1_2(E, bandgap, A):
 	intensity = np.zeros_like(E)
 
 	intensity[(E-bandgap)>0] = A*np.sqrt(E[(E-bandgap)>0]-bandgap)
 
 	return intensity
+
+def plot_3_2(E, bandgap, A):
+	intensity = np.zeros_like(E)
+
+	intensity[(E-bandgap)>0] = A*(E[(E-bandgap)>0]-bandgap)**1.5
+
+	return intensity
+
 
 def trim_data(trim, E, intensity):
 	start = np.argmin(abs(trim[0]-E))
@@ -31,9 +42,9 @@ def trim_data(trim, E, intensity):
 	return E[start:end+1], intensity[start:end+1], (start, end)
 
 
-def plot_fit(ax, E, fit_opt, fit_cov, trim_idx, color):
+def plot_fit(ax, func, E, fit_opt, fit_cov, trim_idx, color):
 	bandgap, bandgap_coef = fit_opt[0], fit_cov[0,0]
-	intensity = func_plot(E, *fit_opt)
+	intensity = func(E, *fit_opt)
 
 	start, end = trim_idx
 	zero = np.argmin(abs(fit_opt[0]-E))
@@ -65,24 +76,24 @@ def savgol_smooth(intensity, window_length, order=2):
 
 
 if __name__ == "__main__":
-	E, intensity = load_data("SnO2_data/Text files for 001 direction/0-0.1 A.msa")
+	E, intensity = load_data("SnO2_data/Text files for 001 direction/0.0-0.1.msa")
 	
 	intensity = normalize(intensity)
 	intensity_smooth = savgol_smooth(intensity, 21)
 
 	E_trim1, intensity_trim1, trim_idx1 = trim_data((3,4), E, intensity_smooth)
-	fit_opt1, fit_cov1 = curve_fit(func, E_trim1, intensity_trim1)
+	fit_opt1, fit_cov1 = curve_fit(fit_1_2, E_trim1, intensity_trim1)
 	
 	E_trim2, intensity_trim2, trim_idx2 = trim_data((4.7,5.5), E, intensity_smooth)
-	fit_opt2, fit_cov2 = curve_fit(func, E_trim2, intensity_trim2)
+	fit_opt2, fit_cov2 = curve_fit(fit_1_2, E_trim2, intensity_trim2)
 	
 	fig, ax = plt.subplots(nrows=1, ncols=2)
 	
 	ax[0].plot(E, intensity, c="r", label="Raw spectrum")
 	ax[1].plot(E, intensity_smooth, c="r", label="Smoothed spectrum")	
 
-	plot_fit(ax[1], E, fit_opt1, fit_cov1, trim_idx1, "green")
-	plot_fit(ax[1], E, fit_opt2, fit_cov2, trim_idx2, "blue")
+	plot_fit(ax[1], plot_1_2, E, fit_opt1, fit_cov1, trim_idx1, "green")
+	plot_fit(ax[1], plot_1_2, E, fit_opt2, fit_cov2, trim_idx2, "blue")
 
 	ax[1].set_xlabel("Energy difference (eV)", fontsize=12)
 	ax[0].set_xlabel("Energy difference (eV)", fontsize=12)
