@@ -1,5 +1,5 @@
 from pymatgen.electronic_structure.plotter import BSPlotter
-from pymatgen.electronic_structure.bandstructure import BandStructure, BandStructureSymmLine
+from pymatgen.electronic_structure.bandstructure import BandStructureSymmLine
 from get_structure import load_structure
 
 def plot_brillouin(bs):
@@ -9,8 +9,12 @@ def plot_bandstructure(bs):
 	BSPlotter(bs).get_plot().show() 
 
 if __name__ == "__main__":
-	#bs_ZnO is BandStructure object: https://pymatgen.org/pymatgen.electronic_structure.bandstructure.html
-	#bs_ZnO = load_structure("data/ZnO.json", sym=True)
-	bs_SnO2 = load_structure("data/SnO2.json", sym=True)
+	#BandStructureSymmLine object: https://pymatgen.org/pymatgen.electronic_structure.bandstructure.html
+	#bs_ZnO = load_structure("data/ZnO.json")
+	bs_SnO2 = load_structure("data/SnO2.json")
 
+	bs_SnO2 = bs_SnO2.apply_scissor(new_band_gap=3) # Move CBM
+	
 	plot_brillouin(bs_SnO2)
+
+	plot_bandstructure(bs_SnO2)

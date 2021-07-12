@@ -1,5 +1,5 @@
 from pymatgen.ext.matproj import MPRester
-from pymatgen.electronic_structure.bandstructure import BandStructure, BandStructureSymmLine
+from pymatgen.electronic_structure.bandstructure import BandStructureSymmLine
 
 import json as json
 
@@ -13,7 +13,7 @@ def save_structure(bs, filename):
 	with open(filename, "w+") as f:
 		json.dump(bs.as_dict(), f)
 
-def load_structure(filename, sym=False):
+def load_structure(filename):
 	"""
 	Load bandstructure from json and return either BandSructure or BandStructureSymmLine  
 	"""
@@ -23,11 +23,8 @@ def load_structure(filename, sym=False):
 	with open(filename, "r") as f:
 		d = json.load(f)
 
-		if sym:
-			bs = BandStructureSymmLine.from_dict(d)
-		else:
-			bs = BandStructure.from_dict(d)
-	
+		bs = BandStructureSymmLine.from_dict(d)
+		
 	return bs
 
 
@@ -40,7 +37,6 @@ if __name__ == "__main__":
 
 	save_structure(bs_ZnO, "data/ZnO.json")
 	save_structure(bs_SnO2, "data/SnO2.json")
-
 
 
 
