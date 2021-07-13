@@ -32,11 +32,15 @@ if __name__ == "__main__":
 	with open("api_key.txt") as f: API_KEY = f.readline()
 
 	mpr = MPRester(API_KEY)
+	
 	bs_ZnO = mpr.get_bandstructure_by_material_id("mp-2133")
 	bs_SnO2 = mpr.get_bandstructure_by_material_id("mp-856")
+	bs_SiC = mpr.get_bandstructure_by_material_id("mp-11714")
 
 	save_structure(bs_ZnO, "data/ZnO.json")
 	save_structure(bs_SnO2, "data/SnO2.json")
+	save_structure(bs_SiC, "data/SiC.json")
+	
 
 
 
