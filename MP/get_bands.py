@@ -58,15 +58,22 @@ def get_bands(bs, branch, n_val, n_con):
 		c_start, c_end = CBM_idx[-1], CBM_idx[0]
 
 	kpoint_coords = np.zeros((k_end-k_start,3))
+	kpoint_degeneracy = np.zeros(k_end-k_start,dtype=int)
+
 
 	val_energies = bs.bands[Spin.up][v_start:v_end+1,k_start:k_end]
 	con_energies = bs.bands[Spin.up][c_start:c_end+1,k_start:k_end]
 
 	for i, kpoint in enumerate(bs.kpoints[k_start:k_end]):
 		kpoint_coords[i,:] = kpoint.frac_coords
+		kpoint_degeneracy[i] = bs.get_kpoint_degeneracy(kpoint.frac_coords) 
+		
 
-	return kpoint_coords, val_energies, con_energies
+	return kpoint_coords, kpoint_degeneracy, val_energies, con_energies
+
 if __name__ == "__main__":
 	bs_ZnO = load_structure("data/ZnO.json")
+	bs_ZnO = bs_ZnO.apply_scissor(3)
 
-	k, v, c = get_bands(bs_ZnO, "L-H", n_val=2,n_con=1)
+	k,k_deg, v, c = get_bands(bs_ZnO, "\Gamma-A", n_val=5,n_con=3)
+	print(k, k_deg)
