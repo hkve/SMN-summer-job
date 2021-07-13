@@ -38,8 +38,8 @@ def get_bands(bs, branch, n_val, n_con):
 	k_start, k_end = get_branch_index(bs, branch, n_kpoints)
 
 
-	VBM_idx = bs_ZnO.get_vbm()["band_index"][Spin.up]
-	CBM_idx = bs_ZnO.get_cbm()["band_index"][Spin.up]
+	VBM_idx = bs.get_vbm()["band_index"][Spin.up]
+	CBM_idx = bs.get_cbm()["band_index"][Spin.up]
 
 	n_VBM, n_CBM = len(VBM_idx), len(CBM_idx)
 
