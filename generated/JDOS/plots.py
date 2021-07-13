@@ -159,7 +159,6 @@ def plot_waterfall(Q, E, J, q_points=np.arange(0, 1, 0.1), dq_lines=0.05):
 		non_zero_idx = instensities[i]!=0
 		ax.plot(E[non_zero_idx], instensities[i, non_zero_idx], label=f"q = {q_points[i]:.1f}")
 
-	ax.plot(E, a)
 	ax.set_xlabel(r"$\Delta E$ [eV]", fontsize=12)
 	ax.set_ylabel("Intensity", fontsize=12)
 	plt.legend()
