@@ -50,10 +50,10 @@ def plot_bands(bands, scatter=False, options={}):
 def plot_JDOS(Q, E, J, JDOS_options={}):
 	fig, ax = plt.subplots()
 
-	JDOS_preprocessing(J, JDOS_options)
+	J = JDOS_preprocessing(J, JDOS_options)
 
 	xlab = "q"
-	if np.min(Q) < 0:
+	if np.min(Q) > 0:
 		xlab = "|q| "
 
 	J_max, J_min, n_levels = get_levels(J)
@@ -61,7 +61,7 @@ def plot_JDOS(Q, E, J, JDOS_options={}):
 	cf = ax.contourf(Q, E, J, levels=np.linspace(J_min, J_max+1, n_levels, dtype=np.int))
 	fig.colorbar(cf, ax=ax)
 
-	ax.set(xlabel=rf"${xlab}" + r"$[Å^{-1}]$", ylabel="Energy [eV]")
+	ax.set(xlabel=rf"${xlab}$ " + r"$[Å^{-1}]$", ylabel="Energy [eV]")
 
 	plt.show()
 
