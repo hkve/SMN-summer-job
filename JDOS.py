@@ -1,4 +1,4 @@
-from band_gap_generator import Band
+from band import Band
 
 import os as os
 import numpy as np
@@ -122,10 +122,8 @@ class JDOS:
 		E_lin = np.linspace(self.E_min, self.E_max, self.n_E+1)
 		E_hits = np.sum(self.J_grid, axis=1)
 
-		total_hits = np.sum(self.J_grid)
-
-		q_hits = q_hits/total_hits
-		E_hits = E_hits/total_hits
+		q_hits = q_hits
+		E_hits = E_hits
 
 		return q_lin, q_hits, E_lin, E_hits
 

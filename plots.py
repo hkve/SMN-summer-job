@@ -58,7 +58,7 @@ def plot_JDOS(Q, E, J, JDOS_options={}):
 
 	J_max, J_min, n_levels = get_levels(J)
 
-	cf = ax.contourf(Q, E, J, cmap="jet", levels=np.linspace(J_min, J_max+1, n_levels, dtype=np.int))
+	cf = ax.contourf(Q, E, J, levels=np.linspace(J_min, J_max+1, n_levels, dtype=np.int))
 	fig.colorbar(cf, ax=ax)
 
 	ax.set(xlabel=rf"${xlab}" + r"$[Å^{-1}]$", ylabel="Energy [eV]")
@@ -82,7 +82,7 @@ def plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={}, band_options={}):
 	ax1 = fig.add_subplot(spec[0])
 	ax2 = fig.add_subplot(spec[1])
 
-	cf = ax1.contourf(Q, E, J, cmap="jet", levels=np.linspace(J_min, J_max+1, n_levels, dtype=np.int))
+	cf = ax1.contourf(Q, E, J, levels=np.linspace(J_min, J_max+1, n_levels, dtype=np.int))
 	fig.colorbar(cf, ax=ax1)
 
 	ax1.set_xlabel(rf"${xlab}$"+" "+r"$[Å^{-1}]$", fontsize=12)
@@ -110,7 +110,7 @@ def plot_integrated_density(q_lin, q_hits, E_lin, E_hits, q_options={}, E_option
 
 	ax[0].set_title("Momentum transfere")
 	ax[0].set_xlabel(r"$q [Å]^{-1}$", fontsize=12)
-	ax[0].set_ylabel("# of transistions as a fraction \n of total # of transistions", fontsize=12)
+	ax[0].set_ylabel("Intensity (a.u.)", fontsize=12)
 
 	ax[1].set_title("Energy transfere")
 	ax[1].set_xlabel(r"$\Delta E [eV]$", fontsize=12)
