@@ -49,7 +49,7 @@ def plot_fit(ax, func, E, fit_opt, fit_cov, trim_idx, color):
 	start, end = trim_idx
 	zero = np.argmin(abs(fit_opt[0]-E))
 
-	print(f"bandgap = {bandgap:.2f} eV, bangap coef = {bandgap_coef:.2e} eV, on energy range = ({E[start]:.2f} eV,{E[end]:.2f} eV)")
+	print(f"bandgap = {bandgap:.2f} eV, bangap coef = {bandgap_coef:.2e} eV, on energy range = ({E[start]:.2f} eV,{E[end]:.2f} eV) -> int length = {(E[end]-E[start]):.2f} eV")
 	ax.plot(E[:zero], intensity[:zero], c="gray", ls="--", lw=2)
 	ax.plot(E[zero:start+1], intensity[zero:start+1], c=color, ls="--", lw=2)
 	ax.plot(E[start:end+1], intensity[start:end+1], c=color, lw=2, label=f"$E_g=${bandgap:.2f} eV")

@@ -37,6 +37,12 @@ def plot_bands_move_fermi_energy(bands, efermi):
 		else:		
 			ax.plot(band.k, band.E, c="b")
 
+	ax.axhline(y=efermi, c="k", ls="--", label=rf"$E_f$ = {efermi:.2f} eV")
+	ax.set(ylim=(-2,2))
+	ax.set_xlabel(f"$k$"+" "+r"$[Å^{-1}]}$", fontsize=12)
+	ax.set_ylabel(r"$E(k)$"+" "+"[eV]", fontsize=12)
+	ax.grid()
+	ax.legend(fontsize=12)
 	plt.show()
 
 def move_fermi_energy(efermi, bands):
@@ -68,15 +74,15 @@ v1.parabolic(effective_mass=0.5, E0=0, k_init=(0,1.5,1000), k0=0.4)
 
 bands = [c1, v1]
 
-bands, efermi = move_fermi_energy(1.1, bands)
+bands, efermi = move_fermi_energy(1.25, bands)
 
-plot_bands_move_fermi_energy(bands, efermi)
-"""
+#plot_bands_move_fermi_energy(bands, efermi)
+
 jdos = JDOS()
 jdos.set_bands(bands)
 jdos.run(E_init=(0,5), q_init=(-1.1,1.1), n_E=250, n_q=250)
 
 Q, E, J = jdos.get_data()
+print(jdos)
 
-
-plot_JDOS(Q,E,J, JDOS_options={"smooth": 1})"""
+plot_JDOS(Q,E,J, JDOS_options={"smooth": 1})
