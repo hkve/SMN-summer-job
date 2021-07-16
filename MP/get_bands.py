@@ -1,6 +1,11 @@
+import sys, os
 import numpy as np
 from pymatgen.electronic_structure.core import Spin
 from get_structure import load_structure
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from band import Band
+from plots import plot_bands
 
 def check_valid_params(bs, branch, n_val, n_con, n_kpoints):
 	branches = set()
@@ -58,7 +63,7 @@ def get_bands(bs, branch, n_val, n_con):
 		c_start, c_end = CBM_idx[-1], CBM_idx[0]
 
 	kpoint_coords = np.zeros((k_end-k_start,3))
-	kpoint_degeneracy = np.zeros(k_end-k_start,dtype=int)
+	#kpoint_degeneracy = np.zeros(k_end-k_start,dtype=int)
 
 
 	val_energies = bs.bands[Spin.up][v_start:v_end+1,k_start:k_end]
@@ -66,14 +71,32 @@ def get_bands(bs, branch, n_val, n_con):
 
 	for i, kpoint in enumerate(bs.kpoints[k_start:k_end]):
 		kpoint_coords[i,:] = kpoint.frac_coords
-		kpoint_degeneracy[i] = bs.get_kpoint_degeneracy(kpoint.frac_coords) 
+		#kpoint_degeneracy[i] = bs.get_kpoint_degeneracy(kpoint.frac_coords) 
 		
+	kpoint_coords = kpoint_coords - kpoint_coords[0] 
+	kpoint_coords = np.linalg.norm(kpoint_coords, axis=1)
 
-	return kpoint_coords, kpoint_degeneracy, val_energies, con_energies
+	return kpoint_coords, val_energies, con_energies
 
-if __name__ == "__main__":
-	bs_ZnO = load_structure("data/ZnO.json")
-	bs_ZnO = bs_ZnO.apply_scissor(3)
+def make_band_objects(k, v, c, interpolate=True, n_points=1000):
+	n_v, n_c = v.shape[0], c.shape[0]
+	bands = []
 
-	k,k_deg, v, c = get_bands(bs_ZnO, "\Gamma-A", n_val=5,n_con=3)
-	print(k, k_deg)
+	for i in range(n_v):
+		band = Band("v")
+		band.E = v[i,:]
+		band.k = k
+
+		bands.append(band)
+
+	for i in range(n_c):
+		band = Band("c")
+		band.E = c[i,:]
+		band.k = k
+
+		bands.append(band)
+
+	for band in bands:
+		band.interpolate(n_points)
+
+	return bands
