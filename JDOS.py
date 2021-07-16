@@ -58,10 +58,10 @@ class JDOS:
 
 		J_grid = np.zeros(J_dims, dtype=int)
 
-		q_min = self.q_min - self.dq/2
-		q_max = self.q_max + self.dq/2
-		E_min = self.E_min - self.dE/2
-		E_max = self.E_max + self.dE/2
+		q_min = self.q_min #- self.dq/2
+		q_max = self.q_max #+ self.dq/2
+		E_min = self.E_min #- self.dE/2
+		E_max = self.E_max #+ self.dE/2
 
 
 		for i in range(n_val):
