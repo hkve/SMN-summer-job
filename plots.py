@@ -104,9 +104,8 @@ def plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={}, band_options={}):
 def plot_integrated_density(q_lin, q_hits, E_lin, E_hits, q_options={}, E_options={}):
 	fig, ax = plt.subplots(nrows=1, ncols=2)
 
-	skip = 10
-	ax[0].scatter(q_lin[1::skip], q_hits[1::skip])
-	ax[1].scatter(E_lin[::skip], E_hits[::skip])
+	ax[0].plot(q_lin, q_hits)
+	ax[1].plot(E_lin, E_hits)
 
 	ax[0].set_title("Momentum transfere")
 	ax[0].set_xlabel(r"$q [Å]^{-1}$", fontsize=12)
