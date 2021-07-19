@@ -87,7 +87,6 @@ def get_bands(bs, branch, n_val, n_con):
 	val_energies = bs.bands[Spin.up][v_start:v_end+1,k_start:k_end+1]
 	con_energies = bs.bands[Spin.up][c_start:c_end+1,k_start:k_end+1]
 
-
 	for i, kpoint in enumerate(bs.kpoints[k_start:k_end+1]):
 		kpoint_coords[i,:] = kpoint.frac_coords
 		#kpoint_degeneracy[i] = bs.get_kpoint_degeneracy(kpoint.frac_coords) 
@@ -96,10 +95,10 @@ def get_bands(bs, branch, n_val, n_con):
 	angles = bs.lattice_rec.angles
 		
 	kpoint_coords = frac_to_cart(kpoint_coords, abc, angles)
+	
 
 	kpoint_coords = kpoint_coords - kpoint_coords[0] 
 	kpoint_coords = np.linalg.norm(kpoint_coords, axis=1)
-
 	return kpoint_coords, val_energies, con_energies
 
 def make_band_objects(k, v, c, interpolate=True, n_points=1000):

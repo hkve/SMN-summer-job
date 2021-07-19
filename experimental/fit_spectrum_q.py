@@ -9,8 +9,15 @@ def read_config(filename):
 	bin_windows = []
 	trim_Es = []
 
+	direction = 0
+	for d in filename.split("_"):
+		if d.isdigit():
+			direction = d
+	"""
 	direction = filename.replace(".txt", "")
 	direction = direction[-3:]
+	"""
+
 	with open(filename, "r") as f:
 		
 		f.readline()
@@ -24,7 +31,7 @@ def read_config(filename):
 	return filenames, bin_windows, trim_Es
 
 def fit_spectrums(filenames, bin_windows, trim_Es, plot=True):
-	skips = [10]
+	skips = [0,1,4,5,6]
 
 	bg = []
 	bg_std = []
@@ -44,7 +51,7 @@ def fit_spectrums(filenames, bin_windows, trim_Es, plot=True):
 			bg_std.append(fit_cov[0,0])
 
 			if plot:
-				print(filenames[i])
+				print(f"{filenames[i]} ---> IDX = {i}")
 				fig, ax = plt.subplots()
 				ax.plot(E, intensity, c="gray")
 				ax.plot(E, intensity_smooth, c="r")
@@ -53,29 +60,15 @@ def fit_spectrums(filenames, bin_windows, trim_Es, plot=True):
 
 	if not plot:
 		return np.array(bg), np.array(bg_std)
+	else: 
+		return (None,None)
 
-filenames, bin_windows, trim_Es = read_config("spectrum_configs_001.txt")
-bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
+filenames, bin_windows, trim_Es = read_config("spectrum_configs_001_test.txt")
+bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=True)
 
-
-
+"""
 fig, ax = plt.subplots()
 ax.plot(bg, c="r")
 ax.set(ylim=(0,5))
 plt.show()
-"""
-E, intensity = fit_spectrum.load_data("SnO2_data/Text files for 001 direction/0.5-0.6.msa")
-intensity = fit_spectrum.normalize(intensity)
-intensity = fit_spectrum.savgol_filter(intensity, 101, 2)
-#4.4,5.2
-E_trim, intensity_trim, trim_idx = fit_spectrum.trim_data((8.8,10), E, intensity)
-fit_opt, fit_cov = fit_spectrum.curve_fit(fit_spectrum.fit_3_2, E_trim, intensity_trim)
-
-fig, ax = plt.subplots()
-fit_spectrum.plot_fit(ax, fit_spectrum.plot_3_2, E, fit_opt, fit_cov, trim_idx, color="green")
-ax.plot(E,intensity)
-ax.set(ylim=(0,1))
-plt.show()
-#E_trim, intensity_trim, trim_idx = trim_data(())
-
 """

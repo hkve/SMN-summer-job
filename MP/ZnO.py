@@ -40,10 +40,10 @@ def jdos(bs, run=False):
 
 
 if __name__ == "__main__":
-	bs_ZnO = load_structure("data/ZnO.json")
-	bs_ZnO = bs_ZnO.apply_scissor(3.37)
+	bs = load_structure("data/ZnO.json")
+	bs = bs.apply_scissor(3.37)
 	
-	jdos(bs_ZnO, run=False)
+	jdos(bs, run=False)
 
-	#plot_brillouin(bs_ZnO)
-	#plot_bandstructure(bs_ZnO, title="ZnO band structure")
+	#plot_brillouin(bs)
+	#plot_bandstructure(bs, title="ZnO band structure")
