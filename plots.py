@@ -14,6 +14,8 @@ def ax_options(ax, options):
 	if "dy" in options.keys():
 		start, end = ax.get_ylim()
 		ax.xaxis.set_ticks(np.arange(start, end, options["dy"]))
+	if "title" in options.keys():
+		ax.set_title(options["title"], fontsize=14)
 
 def JDOS_preprocessing(J, options):
 	if "smooth" in options.keys():
@@ -58,11 +60,13 @@ def plot_JDOS(Q, E, J, JDOS_options={}):
 
 	J_max, J_min, n_levels = get_levels(J)
 
-	cf = ax.contourf(Q, E, J, levels=np.linspace(J_min, J_max+1, n_levels, dtype=np.int))
+	cf = ax.contourf(Q, E, J, levels=np.linspace(J_min, J_max, n_levels, dtype=np.int))
 	fig.colorbar(cf, ax=ax)
 
-	ax.set(xlabel=rf"${xlab}$ " + r"$[Å^{-1}]$", ylabel="Energy [eV]")
-
+	ax_options(ax, JDOS_options)
+	ax.set_xlabel(rf"${xlab}$"+" "+r"$[Å^{-1}]$", fontsize=12)
+	ax.set_ylabel(r"Energy difference $\Delta$E [eV]", fontsize=12)
+	
 	plt.show()
 
 def plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={}, band_options={}):

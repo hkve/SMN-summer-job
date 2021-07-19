@@ -11,7 +11,7 @@ from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS, plot_integrated_de
 
 def jdos(bs, run=False):
 	direction = "\Gamma-A"
-	k, v, c = get_bands(bs, direction, n_val=7,n_con=1)
+	k, v, c = get_bands(bs, direction, n_val=7,n_con=2)
 	bands = make_band_objects(k,v,c, interpolate=False, n_points=1500)
 
 	filename = "ZnO_GA"

@@ -107,13 +107,13 @@ class JDOS:
 		self.Q_grid, self.E_grid = np.meshgrid(Q, E)
 		self.J_grid = np.zeros_like(self.Q_grid, dtype=int)
 
-		for val in self.valence:
-			for con in self.conducting:
+		for i, val in enumerate(self.valence):
+			for j, con in enumerate(self.conducting):
 
 				J_grid = self.bin_window(val, con, self.J_grid.shape)
-
 				self.J_grid += J_grid
 
+				print(f"Done with pair: {i,j}")
 
 	def integrated_density(self):
 		q_lin = np.linspace(self.q_min, self.q_max, self.n_q+1)
