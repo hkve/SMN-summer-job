@@ -5,7 +5,6 @@ from get_structure import load_structure
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from band import Band
-from plots import plot_bands
 
 def check_valid_params(bs, branch, n_val, n_con, n_kpoints):
 	branches = set()
@@ -29,8 +28,27 @@ def check_valid_params(bs, branch, n_val, n_con, n_kpoints):
 def get_branch_index(bs, branch, n_kpoints):
 	for i in range(n_kpoints):
 		branch_info = bs.get_branch(i)[0]
+
 		if branch in branch_info["name"]:
 			return (branch_info["start_index"], branch_info["end_index"])
+	
+def frac_to_cart(k, abc, angles):
+	a, b, c = abc
+
+	alpha, beta, gamma = np.deg2rad(angles)
+
+	omega = a*b*c * np.sqrt(1-np.cos(alpha)**2 - np.cos(beta)**2 - np.cos(gamma)**2 + 2*np.cos(alpha)*np.cos(beta)*np.cos(gamma))
+	
+	M = np.array([
+				[a, b*np.cos(gamma), c*np.cos(beta)],
+				[0, b*np.sin(gamma), c*(np.cos(alpha-np.cos(beta)*np.cos(gamma))/np.cos(gamma))],
+				[0,0,omega/(a*b*np.sin(gamma))]
+				])
+
+	for i in range(k.shape[0]):
+		k[i] = np.dot(M,k[i])
+	
+	return k
 
 def get_bands(bs, branch, n_val, n_con):
 	"""	
@@ -62,17 +80,23 @@ def get_bands(bs, branch, n_val, n_con):
 	else:
 		c_start, c_end = CBM_idx[-1], CBM_idx[0]
 
-	kpoint_coords = np.zeros((k_end-k_start,3))
+	kpoint_coords = np.zeros((k_end-k_start+1,3))
 	#kpoint_degeneracy = np.zeros(k_end-k_start,dtype=int)
 
 
-	val_energies = bs.bands[Spin.up][v_start:v_end+1,k_start:k_end]
-	con_energies = bs.bands[Spin.up][c_start:c_end+1,k_start:k_end]
+	val_energies = bs.bands[Spin.up][v_start:v_end+1,k_start:k_end+1]
+	con_energies = bs.bands[Spin.up][c_start:c_end+1,k_start:k_end+1]
 
-	for i, kpoint in enumerate(bs.kpoints[k_start:k_end]):
+
+	for i, kpoint in enumerate(bs.kpoints[k_start:k_end+1]):
 		kpoint_coords[i,:] = kpoint.frac_coords
 		#kpoint_degeneracy[i] = bs.get_kpoint_degeneracy(kpoint.frac_coords) 
+
+	abc = bs.lattice_rec.abc
+	angles = bs.lattice_rec.angles
 		
+	kpoint_coords = frac_to_cart(kpoint_coords, abc, angles)
+
 	kpoint_coords = kpoint_coords - kpoint_coords[0] 
 	kpoint_coords = np.linalg.norm(kpoint_coords, axis=1)
 
@@ -100,3 +124,11 @@ def make_band_objects(k, v, c, interpolate=True, n_points=1000):
 		band.interpolate(n_points)
 
 	return bands
+
+
+if __name__ == "__main__":
+	bs = load_structure("data/ZnO.json")
+
+	k,v,c = get_bands(bs, "\Gamma-A", 1,1)
+
+	print(k)
