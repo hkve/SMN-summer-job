@@ -4,14 +4,12 @@ from plot_structure import plot_brillouin, plot_bandstructure
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+"""
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from JDOS import JDOS
-from band import Band
 from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS, plot_integrated_density, plot_waterfall
 
-print("not stuck")
 
 def jdos(bs, run=False):
 	direction = "\Gamma-A"
@@ -40,20 +38,11 @@ def jdos(bs, run=False):
 	#plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 3})
 	
 
-
-if __name__ == "__main__":
-	bs = load_structure("data/SnO2.json")
-	bs = bs.apply_scissor(3.37)
-	
-	jdos(bs, run=False)
-
-	#plot_brillouin(bs)
-	#plot_bandstructure(bs, title="ZnO band structure")
 """
 if __name__ == "__main__":
 	print("not stuck")
 	bs = load_structure("data/SnO2.json")
-	bs = bs.apply_scissor(3.7)
+	bs = bs.apply_scissor(3.4505739)
 
 	k, v, c = get_bands(bs, "\Gamma-Z", 1,1)
 	
@@ -65,13 +54,13 @@ if __name__ == "__main__":
 		mids_idx.append(np.argmin(abs(k-mids)))
 	
 	E_dft = []
-	E_exp = np.array([3.5005739,3.56703504, 4.47391524, 5.66235156, 5.91432263, 7.5108972, 10.52755403])
+	E_exp = np.array([3.5005739,3.83, 4.47391524, 4.71, 5.91432263, 7.20, 7.44])
 	for i in mids_idx:
 		E_dft.append(c[0,i]-v[0,i])
 
 	E_dft = np.array(E_dft)
 
-	plt.plot(E_dft)
-	plt.plot(E_exp)	
+	plt.scatter(k_mids, E_dft, label="dft")
+	plt.scatter(k_mids, E_exp, label="exp")	
+	plt.legend()
 	plt.show()
-"""
