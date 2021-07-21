@@ -101,18 +101,19 @@ def flat_bands(run=False):
 
 	if run:
 		c1 = Band("c")
+	
 		v1 = Band("v")
 		v2 = Band("v")
-		v3 = Band("v")
 
-		c1.parabolic(effective_mass=6, E0=1, k_init=(0,1,500), k0=0.5)
-		v1.non_parabolic(alpha= 5,effective_mass=1, E0=0, k_init=(0,1,500), k0=0.5)
-		v2.non_parabolic(alpha= 5,effective_mass=2, E0=0.1, k_init=(0,1,500), k0=0.2)
+		k_init = (0,1,2000)
+		c1.parabolic(effective_mass=0.5, E0=1, k_init=k_init, k0=0.5)
+		v1.parabolic(effective_mass=0.5, E0=0, k_init=k_init, k0=0.5)
+		v2.non_parabolic(alpha= 5,effective_mass=5, E0=-0.5, k_init=k_init, k0=0.5)
 
-		bands = [c1, v1]
+		bands = [c1, v1, v2]
 
 		jdos.set_bands(bands)
-		jdos.run(E_init=(0.5,3), q_init=(-1,1), n_E=500, n_q=500)
+		jdos.run(E_init=(0.5,3), q_init=(-1,1), n_E=1000, n_q=1000)
 		
 		jdos.save_data(filename, bands=True)
 	else:
@@ -160,5 +161,5 @@ def multiple_bands(run=False):
 #symmetric_parabolic_direct_gap(run=False)
 #symmetric_indirect_gap(run=True)
 #non_parabolic_direct_gap(run=True)
-#flat_bands(run=True)
-multiple_bands(run=True)
+flat_bands(run=True)
+#multiple_bands(run=True)

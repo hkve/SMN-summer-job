@@ -68,18 +68,18 @@ class JDOS:
 			for j in range(n_con):
 				
 				q = con.k[j] - val.k[i]
-				delE = con.E[j] - val.E[i]
+				E = con.E[j] - val.E[i]
 				
-				if not q_min < q < q_max or not E_min < delE < E_max:
+				if not q_min < q < q_max or not E_min < E < E_max:
 					continue
 				else:
 					q_idx = (q-self.q_min)/self.dq
-					delE_idx = (delE-self.E_min)/self.dE
+					E_idx = (E-self.E_min)/self.dE
 
 					q_idx = int(round(q_idx, 0))
-					delE_idx = int(round(delE_idx, 0))
+					E_idx = int(round(E_idx, 0))
 
-					J_grid[delE_idx, q_idx] += 1
+					J_grid[E_idx, q_idx] += 1
 		
 
 		return J_grid
@@ -109,7 +109,7 @@ class JDOS:
 
 		for i, val in enumerate(self.valence):
 			for j, con in enumerate(self.conducting):
-
+				
 				J_grid = self.bin_window(val, con, self.J_grid.shape)
 				self.J_grid += J_grid
 

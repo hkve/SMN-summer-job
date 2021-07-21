@@ -15,7 +15,7 @@ def ax_options(ax, options):
 		start, end = ax.get_ylim()
 		ax.xaxis.set_ticks(np.arange(start, end, options["dy"]))
 	if "title" in options.keys():
-		ax.set_title(options["title"], fontsize=14)
+		ax.set_title(options["title"], fontsize=16)
 
 def JDOS_preprocessing(J, options):
 	if "smooth" in options.keys():
@@ -51,6 +51,7 @@ def plot_bands(bands, scatter=False, options={}):
 
 def plot_JDOS(Q, E, J, JDOS_options={}):
 	fig, ax = plt.subplots()
+	fig.set_size_inches(10,8)
 
 	J = JDOS_preprocessing(J, JDOS_options)
 
@@ -61,12 +62,17 @@ def plot_JDOS(Q, E, J, JDOS_options={}):
 	J_max, J_min, n_levels = get_levels(J)
 
 	cf = ax.contourf(Q, E, J, levels=np.linspace(J_min, J_max, n_levels, dtype=np.int))
-	fig.colorbar(cf, ax=ax)
+	cbar = fig.colorbar(cf, ax=ax)
 
 	ax_options(ax, JDOS_options)
-	ax.set_xlabel(rf"${xlab}$"+" "+r"$[Å^{-1}]$", fontsize=12)
-	ax.set_ylabel(r"Energy difference $\Delta$E [eV]", fontsize=12)
-	
+
+	cbar.ax.tick_params(labelsize=14) 
+	ax.set_xlabel(rf"${xlab}$"+" "+r"$[Å^{-1}]$", fontsize=16)
+	ax.set_ylabel(r"Energy difference E [eV]", fontsize=16)
+	for tick in ax.xaxis.get_major_ticks(): tick.label.set_fontsize(14) 
+	for tick in ax.yaxis.get_major_ticks(): tick.label.set_fontsize(14) 
+
+	fig.tight_layout()
 	plt.show()
 
 def plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={}, band_options={}):
@@ -90,7 +96,7 @@ def plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={}, band_options={}):
 	fig.colorbar(cf, ax=ax1)
 
 	ax1.set_xlabel(rf"${xlab}$"+" "+r"$[Å^{-1}]$", fontsize=12)
-	ax1.set_ylabel(r"Energy difference $\Delta$E [eV]", fontsize=12)
+	ax1.set_ylabel(r"Energy difference E [eV]", fontsize=12)
 
 	for band in bands:
 		ax2.plot(band.k, band.E, c="b")
@@ -116,7 +122,7 @@ def plot_integrated_density(q_lin, q_hits, E_lin, E_hits, q_options={}, E_option
 	ax[0].set_ylabel("Intensity (a.u.)", fontsize=12)
 
 	ax[1].set_title("Energy transfere")
-	ax[1].set_xlabel(r"$\Delta E [eV]$", fontsize=12)
+	ax[1].set_xlabel(r"E [eV]$", fontsize=12)
 
 	ax[0].ticklabel_format(axis="y", style="sci", scilimits=(0,0), useMathText=True)
 	ax[1].ticklabel_format(axis="y", style="sci", scilimits=(0,0), useMathText=True)
@@ -162,7 +168,7 @@ def plot_waterfall(Q, E, J, q_points=np.arange(0, 1, 0.1), dq_lines=0.05):
 		non_zero_idx = instensities[i]!=0
 		ax.plot(E[non_zero_idx], instensities[i, non_zero_idx], label=f"q = {q_points[i]:.1f}")
 
-	ax.set_xlabel(r"$\Delta E$ [eV]", fontsize=12)
+	ax.set_xlabel(r"E [eV]", fontsize=12)
 	ax.set_ylabel("Intensity", fontsize=12)
 	plt.legend()
 	plt.show()

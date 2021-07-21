@@ -11,17 +11,16 @@ from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS, plot_integrated_de
 
 def jdos(bs, run=False):
 	direction = "\Gamma-A"
-	k, v, c = get_bands(bs, direction, n_val=6,n_con=2)
+	k, v, c = get_bands(bs, direction, n_val=8,n_con=1)
 	bands = make_band_objects(k,v,c, interpolate=False, n_points=1500)
 
 	filename = "ZnO_GA"
 	jdos = JDOS()
 
-	
 	if run:
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2.5,10), q_init=(-0.6,0.6), n_E=500, n_q=500)
-		#jdos.run(E_init=(2.5,10), q_init=(-1.3,1.3), n_E=500, n_q=500) <- K-\Gamma
+		jdos.run(E_init=(2.5,10), q_init=(-0.6,0.6), n_E=500, n_q=500)# <- \Gamma-A
+		#jdos.run(E_init=(2.5,10), q_init=(-1.3,1.3), n_E=500, n_q=500) #<- K-\Gamma
 		jdos.save_data(filename)
 
 	else:
@@ -41,7 +40,7 @@ if __name__ == "__main__":
 	bs = load_structure("data/ZnO.json")
 	bs = bs.apply_scissor(3.37)
 	
-	jdos(bs, run=True)
+	jdos(bs, run=False)
 
 	#plot_brillouin(bs)
 	#plot_bandstructure(bs, title="ZnO band structure")
