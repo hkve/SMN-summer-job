@@ -71,3 +71,26 @@ class Band:
 if __name__ == "__main__":
 	band1 = Band("val")
 	band1.parabolic(effective_mass=0.1, E0 = 1)
+
+def make_band_objects(k, v, c, interpolate=True, n_points=1000):
+	n_v, n_c = v.shape[0], c.shape[0]
+	bands = []
+
+	for i in range(n_v):
+		band = Band("v")
+		band.E = v[i,:]
+		band.k = k
+
+		bands.append(band)
+
+	for i in range(n_c):
+		band = Band("c")
+		band.E = c[i,:]
+		band.k = k
+
+		bands.append(band)
+
+	for band in bands:
+		band.interpolate(n_points)
+
+	return bands

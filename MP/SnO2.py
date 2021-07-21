@@ -1,14 +1,17 @@
 from get_structure import load_structure
-from get_bands import get_bands, make_band_objects
-from plot_structure import plot_brillouin, plot_bandstructure
+from get_bands import get_bands
+
 import numpy as np
 import matplotlib.pyplot as plt
 
 """
+from get_bands import get_bands
+from plot_structure import plot_brillouin, plot_bandstructure
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from JDOS import JDOS
-from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS, plot_integrated_density, plot_waterfall
+from Band import make_band_objects
+from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS
 
 
 def jdos(bs, run=False):
@@ -36,13 +39,13 @@ def jdos(bs, run=False):
 	Q, E, J = jdos.get_data()
 	plot_JDOS(Q, E, J, JDOS_options={"smooth": 2.5, "title": title})
 	#plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 3})
-	
-
 """
-if __name__ == "__main__":
-	print("not stuck")
-	bs = load_structure("data/SnO2.json")
-	bs = bs.apply_scissor(3.4505739)
+
+
+def plot_with_experimental(bs, direction): 
+	bg, bg_std = np.loadtxt(f"sno_bg/{direction}.txt", delimiter=",", unpack=True)
+	
+	bs = bs.apply_scissor(bg[0])
 
 	k, v, c = get_bands(bs, "\Gamma-Z", 1,1)
 	
@@ -60,7 +63,16 @@ if __name__ == "__main__":
 
 	E_dft = np.array(E_dft)
 
-	plt.scatter(k_mids, E_dft, label="dft")
-	plt.scatter(k_mids, E_exp, label="exp")	
-	plt.legend()
+	fig, ax = plt.subplots()
+	ax.scatter(k_mids, E_dft, label="dft")
+	ax.scatter(k_mids, E_exp, label="exp")	
+	ax.set_xticks(np.linspace(0,1,11))
+	ax.legend()
 	plt.show()
+
+
+if __name__ == "__main__":
+	bs = load_structure("data/SnO2.json")
+
+	plot_with_experimental(bs, "001")
+
