@@ -127,6 +127,30 @@ class JDOS:
 
 		return q_lin, q_hits, E_lin, E_hits
 
+	def integrate_q(self, q_points, dq_lines):
+		n_lines = q_points.shape[0]
+	
+		dq_lines_idx = np.argmin(abs(self.Q_grid[0]-dq_lines))
+		q_points_idx = np.zeros_like(q_points, dtype=int)
+
+
+		for i, q_point in enumerate(q_points):
+			q_points_idx[i] = np.argmin(abs(self.Q_grid[0]-q_point))
+
+
+		instensities = np.zeros(shape=(n_lines-1, self.n_E+1), dtype=int) 
+
+		for i in range(n_lines-1):
+			start, end = q_points_idx[i], q_points_idx[i+1]
+			if start > dq_lines:
+				start -= dq_lines_idx
+			if not i == n_lines-2:
+				end -= dq_lines_idx
+
+			instensities[i] = np.sum(self.J_grid[:,start:end], axis=1)
+
+		return self.E_grid[:,0], instensities
+
 	def map_to_abs(self):
 		if self.Q_grid is None or self.E_grid is None or self.J_grid is None:
 			print("No data loaded. Load data or run JDOS")
