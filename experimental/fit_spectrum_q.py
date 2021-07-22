@@ -72,16 +72,9 @@ def save(filename, bgs, bgs_std):
 if __name__ == "__main__":
 	# 001
 	"""
-	filenames, bin_windows, trim_Es = read_config("spectrum_configs_001_test.txt")
-	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=True)
-	"""
-	filenames, bin_windows, trim_Es = read_config("spectrum_configs_001_test.txt")
+	filenames, bin_windows, trim_Es = read_config("spectrum_configs_001.txt")
 	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
 	save("001.txt", bg, bg_std)
-	
-"""
-print(bg)
-ax.plot(bg, c="r")
-#ax.set(ylim=(0,5))
-plt.show()
-"""
+	"""
+
+	filenames, bin_windows, trim_Es = read_config("")
