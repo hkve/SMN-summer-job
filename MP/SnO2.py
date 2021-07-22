@@ -73,12 +73,23 @@ def plot_with_experimental(bs, direction, run=False):
 
 	bs = bs.apply_scissor(bg_exp[0])
 
-	filename = "sno2_dft_integrated"
+	filename = ""
+	sym_dir = ""
+	if direction == "001":
+		filename = f"sno2_dft_{direction}"
+		sym_dir = "\Gamma-Z"
+	elif direction == "100":
+		filename = f"sno2_dft_{direction}"
+		sym_dir = "\Gamma-X"
+	else:
+		print("Wrong direction, 001 or 100")
+		exit()
+
 	jdos = JDOS()
 	
 	if run:
 		bs = bs.apply_scissor(bg_exp[0])
-		k, v, c = get_bands(bs, "\Gamma-Z", 1,1)
+		k, v, c = get_bands(bs, sym_dir, 1,1)
 		bands = make_band_objects(k,v,c,interpolate=True, n_points=3000)
 		jdos.set_bands(bands)
 		jdos.run(E_init=(2,12), q_init=(0,1.3), n_E=1000, n_q=500)
@@ -99,7 +110,6 @@ def plot_with_experimental(bs, direction, run=False):
 				k += 1
 				break
 
-	print(bg_exp, bg_dft)
 	k_mids = [r[0]+0.5*(r[1]-r[0]) for r in q_ranges]
 	fig, ax = plt.subplots()
 	ax.scatter(k_mids, bg_dft, label="dft")
@@ -112,6 +122,15 @@ def plot_with_experimental(bs, direction, run=False):
 if __name__ == "__main__":
 	print("not stuck")
 	bs = load_structure("data/SnO2.json")
-	#jdos(bs, run=True)
+	
+	""" 001
+	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.3,0.4),(0.5,0.6),(0.7,0.8),(0.9,1.0)]
 	plot_with_experimental(bs, "001", False)
+	"""
+
+	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.3,0.4),(0.5,0.6)]
+	plot_with_experimental(bs, "100", True)
+	k, v, c = get_bands(bs, "\Gamma-X",1,1)
+	print(k[0], k[-1], k.shape)
+
 
