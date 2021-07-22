@@ -84,7 +84,7 @@ if __name__ == "__main__":
 	E_trim1, intensity_trim1, trim_idx1 = trim_data((3,4), E, intensity_smooth)
 	fit_opt1, fit_cov1 = curve_fit(fit_1_2, E_trim1, intensity_trim1)
 	
-	E_trim2, intensity_trim2, trim_idx2 = trim_data((4.7,5.5), E, intensity_smooth)
+	E_trim2, intensity_trim2, trim_idx2 = trim_data((5,5.9), E, intensity_smooth)
 	fit_opt2, fit_cov2 = curve_fit(fit_1_2, E_trim2, intensity_trim2)
 	
 	fig, ax = plt.subplots(nrows=1, ncols=2)
@@ -98,6 +98,6 @@ if __name__ == "__main__":
 	ax[1].set_xlabel("Energy difference (eV)", fontsize=12)
 	ax[0].set_xlabel("Energy difference (eV)", fontsize=12)
 	ax[0].set_ylabel("Normalized intensity", fontsize=12)
-	ax[0].legend()
-	ax[1].legend(loc=2)
+	ax[0].legend(fontsize=12)
+	ax[1].legend(loc=2, fontsize=12)
 	plt.show()

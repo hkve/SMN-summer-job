@@ -75,7 +75,6 @@ if __name__ == "__main__":
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_001_test.txt")
 	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=True)
 	"""
-	# 100
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_001_test.txt")
 	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
 	save("001.txt", bg, bg_std)

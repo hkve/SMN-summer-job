@@ -127,29 +127,25 @@ class JDOS:
 
 		return q_lin, q_hits, E_lin, E_hits
 
-	def integrate_q(self, q_points, dq_lines):
-		n_lines = q_points.shape[0]
-	
-		dq_lines_idx = np.argmin(abs(self.Q_grid[0]-dq_lines))
-		q_points_idx = np.zeros_like(q_points, dtype=int)
+	def integrate_q(self, q_intervals):
+		n_intervals = len(q_intervals)
+		
+		intensities = np.zeros((n_intervals, self.n_E+1))
+		Q, E = self.Q_grid[0], self.E_grid[:,0]
+		
+		for i, interval in enumerate(q_intervals):
+			q_start, q_end = interval
 
+			if q_start < self.q_min or q_end > self.q_max:
+				print(f"{interval} is no inside ({self.q_min},{self.q_max}) range")
+			else:
+				idx_start = np.argmin(abs(Q-q_start))
+				idx_end = np.argmin(abs(Q-q_end))
 
-		for i, q_point in enumerate(q_points):
-			q_points_idx[i] = np.argmin(abs(self.Q_grid[0]-q_point))
+				J = np.sum(self.J_grid[:,idx_start:idx_end+1], axis=1)
+				intensities[i] = J
 
-
-		instensities = np.zeros(shape=(n_lines-1, self.n_E+1), dtype=int) 
-
-		for i in range(n_lines-1):
-			start, end = q_points_idx[i], q_points_idx[i+1]
-			if start > dq_lines:
-				start -= dq_lines_idx
-			if not i == n_lines-2:
-				end -= dq_lines_idx
-
-			instensities[i] = np.sum(self.J_grid[:,start:end], axis=1)
-
-		return self.E_grid[:,0], instensities
+		return E, intensities
 
 	def map_to_abs(self):
 		if self.Q_grid is None or self.E_grid is None or self.J_grid is None:
@@ -289,7 +285,23 @@ if __name__ == "__main__":
 
 	jdos = JDOS()
 	jdos.set_bands(bands)
+	"""
 	jdos.run(q_init=(-2,2), E_init=(0,4), n_q=100, n_E=100)
-	Q, E, J = jdos.get_data()
 
-	plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
+	jdos.save_data("test")
+	"""
+	jdos.load_data("test")
+	
+	#plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
+	q_intervals =  [(0,0.1),(0.1,0.2),(0.3,0.4),(0.4,0.5),(0.5,0.6),(0.6,0.7),(0.7,0.8)]
+
+	E, inten = jdos.integrate_q(q_intervals)
+
+	import matplotlib.pyplot as plt
+	fig, ax = plt.subplots()
+
+	for i in range(len(q_intervals)):
+		ax.plot(E, inten[i], label=f"q = {q_intervals[i]}")
+
+	ax.legend()
+	plt.show()

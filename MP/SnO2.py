@@ -23,7 +23,7 @@ def jdos(bs, run=False):
 
 	if run:
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2.5,10), q_init=(-0.6,0.6), n_E=500, n_q=500)
+		jdos.run(E_init=(2.5,10), q_init=(0,1.3), n_E=500, n_q=500)
 		jdos.save_data(filename)
 
 	else:
@@ -37,7 +37,7 @@ def jdos(bs, run=False):
 	#plot_JDOS(Q, E, J, JDOS_options={"smooth": 2.5, "title": title})
 	plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 3})
 
-
+"""
 def plot_with_experimental(bs, direction): 
 	bg, bg_std = np.loadtxt(f"sno_bg/{direction}.txt", delimiter=",", unpack=True)
 	
@@ -69,33 +69,27 @@ def plot_with_experimental(bs, direction):
 """
 def plot_with_experimental(bs, direction, run=False): 
 	bg_exp, bg_std = np.loadtxt(f"sno_bg/{direction}.txt", delimiter=",", unpack=True)
-	
+	bg_dft = np.zeros_like(bg_exp)
+
+	bs = bs.apply_scissor(bg_exp[0])
+
 	filename = "sno2_dft_integrated"
 	jdos = JDOS()
 	
 	if run:
 		bs = bs.apply_scissor(bg_exp[0])
 		k, v, c = get_bands(bs, "\Gamma-Z", 1,1)
-		bands = make_band_objects(k,v,c,interpolate=True)
+		bands = make_band_objects(k,v,c,interpolate=True, n_points=3000)
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2,12), q_init=(0,1.3), n_E=500, n_q=500)
+		jdos.run(E_init=(2,12), q_init=(0,1.3), n_E=1000, n_q=500)
 
 		jdos.save_data(filename)
 	else:
 		jdos.load_data(filename)
 
-	E, intesities = jdos.integrate_q(np.array([0,0.1,0.2,0.3,0.5,0.7,0.9]), 0.05)
+	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.3,0.4),(0.5,0.6),(0.7,0.8),(0.9,1.0)]
+	E, intesities = jdos.integrate_q(q_ranges)
 
-	bg_dft = np.zeros_like(bg_exp)
-
-
-	fix, ax = plt.subplots()
-	for i in range(intesities.shape[0]):
-		ax.plot(E, intesities[i], label=f"{i}")
-
-	ax.legend()
-	plt.show()
-	
 	k = 0
 	for i in range(intesities.shape[0]):
 		non_zero_idx = 0
@@ -104,8 +98,9 @@ def plot_with_experimental(bs, direction, run=False):
 				bg_dft[k] = E[j]
 				k += 1
 				break
-				
-	k_mids = np.array([0.05,0.15,0.25,0.35,0.55,0.75,0.95])
+
+	print(bg_exp, bg_dft)
+	k_mids = [r[0]+0.5*(r[1]-r[0]) for r in q_ranges]
 	fig, ax = plt.subplots()
 	ax.scatter(k_mids, bg_dft, label="dft")
 	ax.scatter(k_mids, bg_exp, label="exp")	
@@ -113,11 +108,10 @@ def plot_with_experimental(bs, direction, run=False):
 	ax.legend()
 	plt.show()
 
-"""
+
 if __name__ == "__main__":
 	print("not stuck")
 	bs = load_structure("data/SnO2.json")
-	bs = bs.apply_scissor(3.5)
 	#jdos(bs, run=True)
-	plot_with_experimental(bs, "001")
+	plot_with_experimental(bs, "001", False)
 
