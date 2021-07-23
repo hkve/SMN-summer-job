@@ -9,7 +9,7 @@ from plot_structure import plot_brillouin, plot_bandstructure
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from JDOS import JDOS
-from band import make_band_objects, overstep_brinoulli
+from band import make_band_objects
 from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS
 
 

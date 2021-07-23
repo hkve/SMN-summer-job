@@ -95,7 +95,7 @@ def make_band_objects(k, v, c, interpolate=True, n_points=1000):
 
 	return bands
 
-def overstep_brinoulli(bands, q_ranges):
+def extend_brinoulli(bands, q_ranges):
 	k_max = np.max(bands[0].k)
 	q_max = q_ranges[-1][1]
 
@@ -116,24 +116,3 @@ def overstep_brinoulli(bands, q_ranges):
 			band.E = np.r_[band.E, add_E]
 
 	return bands
-
-if __name__ == "__main__":
-	v = Band("v")
-	c = Band("c")
-
-
-	c.parabolic(E0=1, k_init=(0,1,500), k0=0.5)
-	v.parabolic(E0=0, k_init=(0,1,500), k0=0.5)
-
-	bands = [c,v]
-
-	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.4,0.5),(0.7,0.8),(0.9,1.0),(1.2,1.3)]
-	
-	bands = overstep_brinoulli(bands, q_ranges)
-
-	import matplotlib.pyplot as plt
-	fig, ax = plt.subplots()
-	for band  in bands:	
-		ax.plot(band.k, band.E, c="r")
-	plt.show()
-	
