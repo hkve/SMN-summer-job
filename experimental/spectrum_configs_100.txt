@@ -1,5 +1,5 @@
 filename	bin_window	trim_start	trim_end
-0.0-0.1.msa		21			3.95 		4.75
+0.0-0.1.msa		21			3.95 		4.83
 0.1-0.2.msa		29			8			8.9
 0.2-0.3.msa		51			4.3 		5.1
 0.4-0.5.msa		99			7.53		8.2

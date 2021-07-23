@@ -32,7 +32,7 @@ def read_config(filename):
 	return filenames, bin_windows, trim_Es
 
 def fit_spectrums(filenames, bin_windows, trim_Es, plot=True):
-	show = [1]
+	show = [2]
 
 	bg = []
 	bg_std = []
