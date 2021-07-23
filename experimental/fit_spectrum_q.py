@@ -32,14 +32,14 @@ def read_config(filename):
 	return filenames, bin_windows, trim_Es
 
 def fit_spectrums(filenames, bin_windows, trim_Es, plot=True):
-	show = []
+	show = [1]
 
 	bg = []
 	bg_std = []
 
 	for i in range(len(filenames)):
 
-		if not i in show:
+		if i in show:
 			E, intensity = fit_spectrum.load_data(filenames[i])
 
 			intensity = fit_spectrum.normalize(intensity)
@@ -77,6 +77,8 @@ if __name__ == "__main__":
 	save("001.txt", bg, bg_std)
 	"""
 
+	""" 100
+	"""
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_100.txt")
-	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
-	save("100.txt", bg, bg_std)
+	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=True)
+	#save("100.txt", bg, bg_std)
