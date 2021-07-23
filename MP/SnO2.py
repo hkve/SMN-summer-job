@@ -57,23 +57,21 @@ def plot_with_experimental(bs, direction, q_ranges,run=False):
 
 	jdos = JDOS()
 	
-	bs = bs.apply_scissor(bg_exp[0])
-	k, v, c = get_bands(bs, sym_dir, 1,1)
-	
-	bands = make_band_objects(k,v,c,interpolate=True, n_points=3000)
-	bands = overstep_brinoulli(bands, q_ranges) 
-	
 	if run:
+		bs = bs.apply_scissor(bg_exp[0])
+		k, v, c = get_bands(bs, sym_dir, 1,1)
 		
+		print(np.max(k))
+		exit()
+		bands = make_band_objects(k,v,c,interpolate=True, n_points=1000)
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2,12), q_init=(0,1.3), n_E=1000, n_q=500)
+		jdos.run(E_init=(2,12), q_init=(0,0.65), n_E=1000, n_q=500)
 
 		jdos.save_data(filename)
 	else:
 		jdos.load_data(filename)
 
-	plot_bands_and_JDOS(*jdos.get_data(), bands)
-	exit()
+	jdos.mirror_bz()
 	E, intesities = jdos.integrate_q(q_ranges)
 
 
@@ -106,7 +104,7 @@ if __name__ == "__main__":
 	"""
 
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.4,0.5),(0.7,0.8),(0.9,1.0),(1.2,1.3)]
-	plot_with_experimental(bs, "100", q_ranges, run=False)
+	plot_with_experimental(bs, "100", q_ranges, run=True)
 	
 
 

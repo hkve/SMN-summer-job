@@ -129,7 +129,6 @@ class JDOS:
 
 	def integrate_q(self, q_intervals):
 		n_intervals = len(q_intervals)
-		
 		intensities = np.zeros((n_intervals, self.n_E+1))
 		Q, E = self.Q_grid[0], self.E_grid[:,0]
 		
@@ -137,7 +136,7 @@ class JDOS:
 			q_start, q_end = interval
 
 			if q_start < self.q_min or q_end > self.q_max:
-				print(f"{interval} is no inside ({self.q_min},{self.q_max}) range")
+				print(f"{interval} is not inside ({self.q_min},{self.q_max}) range")
 			else:
 				idx_start = np.argmin(abs(Q-q_start))
 				idx_end = np.argmin(abs(Q-q_end))
@@ -146,6 +145,19 @@ class JDOS:
 				intensities[i] = J
 
 		return E, intensities
+
+	def mirror_bz(self):
+		if self.q_min < 0:
+			print("Before mirroring brinoulli, the q-values must be strictly positive. Run with q_init(0,->) or map_to_abs()")
+
+		self.Q_grid = np.c_[self.Q_grid, self.Q_grid[:,1:]+self.q_max]
+		self.E_grid = np.c_[self.E_grid, self.E_grid[:,1:]]
+		self.J_grid = np.c_[self.J_grid, np.flip(self.J_grid[:,1:], axis=1)]
+
+
+		self.q_max *= 2
+		self.n_q += (self.n_q-1)
+		self.n_E += (self.n_E-1)
 
 	def map_to_abs(self):
 		if self.Q_grid is None or self.E_grid is None or self.J_grid is None:
@@ -272,36 +284,42 @@ class JDOS:
 		return self.conducting + self.valence
 
 
+
 if __name__ == "__main__":
 	c1 = Band("c")
 	v1 = Band("v")
 
-	c1.parabolic(E0=1)
-	v1.parabolic(E0=0)
+	c1.parabolic(E0=1, k_init=(0,1,1000), k0=0.5)
+	v1.parabolic(E0=0, k_init=(0,1,1000), k0=0.5)
 
 	bands = [c1, v1]
 	
 	from plots import plot_bands_and_JDOS
+	fname = "test"
 
 	jdos = JDOS()
+	"""
 	jdos.set_bands(bands)
+	jdos.run(E_init=(0,5), q_init=(0,1), n_E = 500, n_q=500)
+	jdos.save_data(fname)
 	"""
-	jdos.run(q_init=(-2,2), E_init=(0,4), n_q=100, n_E=100)
+	jdos.load_data(fname)
 
-	jdos.save_data("test")
-	"""
-	jdos.load_data("test")
-	
-	#plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
-	q_intervals =  [(0,0.1),(0.1,0.2),(0.3,0.4),(0.4,0.5),(0.5,0.6),(0.6,0.7),(0.7,0.8)]
+	q_intervals = [(0,0.1),(1.9,2.0)]
 
-	E, inten = jdos.integrate_q(q_intervals)
+	jdos.mirror_bz()
+
+	E, intesities = jdos.integrate_q(q_intervals)
+
 
 	import matplotlib.pyplot as plt
-	fig, ax = plt.subplots()
 
-	for i in range(len(q_intervals)):
-		ax.plot(E, inten[i], label=f"q = {q_intervals[i]}")
+	fix, ax = plt.subplots()	
+
+	for i in range(intesities.shape[0]):
+		ax.plot(E, intesities[i], label=f"{q_intervals[i]}")
 
 	ax.legend()
 	plt.show()
+
+	#q_intervals =  [(0,0.1),(0.1,0.2),(0.3,0.4),(0.4,0.5),(0.5,0.6),(0.6,0.7),(0.7,0.8)]
