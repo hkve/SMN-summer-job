@@ -64,9 +64,9 @@ def fit_spectrums(filenames, bin_windows, trim_Es, plot=True):
 	else: 
 		return (None,None)
 
-def save(filename, bgs, bgs_std):
+def save(filename, bgs, stds):
 	with open(f"{filename}", "w+") as file:
-		for bg, std in zip(bgs, bg_std):
+		for bg, std in zip(bgs, stds):
 			file.write(f"{bg},{std}\n")
 
 if __name__ == "__main__":
@@ -78,4 +78,5 @@ if __name__ == "__main__":
 	"""
 
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_100.txt")
-	bg, std = fit_spectrums(filenames, bin_windows, trim_Es, plot=True)
+	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
+	save("100.txt", bg, bg_std)
