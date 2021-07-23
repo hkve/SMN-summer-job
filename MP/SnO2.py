@@ -45,12 +45,15 @@ def plot_with_experimental(bs, direction, q_ranges,run=False):
 
 	filename = ""
 	sym_dir = ""
+	q_max = 0
 	if direction == "001":
 		filename = f"sno2_dft_{direction}"
 		sym_dir = "\Gamma-Z"
+		q_max = 1 # Dosent really matter
 	elif direction == "100":
 		filename = f"sno2_dft_{direction}"
 		sym_dir = "\Gamma-X"
+		q_max = 0.6501188356086567 # Does matter
 	else:
 		print("Wrong direction, 001 or 100")
 		exit()
@@ -61,11 +64,9 @@ def plot_with_experimental(bs, direction, q_ranges,run=False):
 		bs = bs.apply_scissor(bg_exp[0])
 		k, v, c = get_bands(bs, sym_dir, 1,1)
 		
-		print(np.max(k))
-		exit()
-		bands = make_band_objects(k,v,c,interpolate=True, n_points=1000)
+		bands = make_band_objects(k,v,c,interpolate=True, n_points=3000)
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2,12), q_init=(0,0.65), n_E=1000, n_q=500)
+		jdos.run(E_init=(2,12), q_init=(0,q_max), n_E=1000, n_q=500)
 
 		jdos.save_data(filename)
 	else:
@@ -85,12 +86,16 @@ def plot_with_experimental(bs, direction, q_ranges,run=False):
 				k += 1
 				break
 
+
+
 	k_mids = [r[0]+0.5*(r[1]-r[0]) for r in q_ranges]
 	fig, ax = plt.subplots()
+	
 	ax.scatter(k_mids, bg_dft, label="dft")
 	ax.scatter(k_mids, bg_exp, label="exp")	
-	ax.set_xticks(np.arange(0,1.3,0.1))
+	ax.set_xticks(np.arange(0,k_mids[-1]+0.15,0.1))
 	ax.legend()
+	
 	plt.show()
 
 
@@ -103,8 +108,10 @@ if __name__ == "__main__":
 	plot_with_experimental(bs, "001", False)
 	"""
 
+	""" 100
+	"""
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.4,0.5),(0.7,0.8),(0.9,1.0),(1.2,1.3)]
-	plot_with_experimental(bs, "100", q_ranges, run=True)
+	plot_with_experimental(bs, "100", q_ranges, run=False)
 	
 
 

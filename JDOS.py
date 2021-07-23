@@ -132,6 +132,7 @@ class JDOS:
 		intensities = np.zeros((n_intervals, self.n_E+1))
 		Q, E = self.Q_grid[0], self.E_grid[:,0]
 		
+
 		for i, interval in enumerate(q_intervals):
 			q_start, q_end = interval
 
@@ -151,13 +152,13 @@ class JDOS:
 			print("Before mirroring brinoulli, the q-values must be strictly positive. Run with q_init(0,->) or map_to_abs()")
 
 		self.Q_grid = np.c_[self.Q_grid, self.Q_grid[:,1:]+self.q_max]
-		self.E_grid = np.c_[self.E_grid, self.E_grid[:,1:]]
+		#self.E_grid = np.c_[self.E_grid, self.E_grid[:,1:]]
 		self.J_grid = np.c_[self.J_grid, np.flip(self.J_grid[:,1:], axis=1)]
 
 
 		self.q_max *= 2
 		self.n_q += (self.n_q-1)
-		self.n_E += (self.n_E-1)
+		#self.n_E += (self.n_E-1)
 
 	def map_to_abs(self):
 		if self.Q_grid is None or self.E_grid is None or self.J_grid is None:
