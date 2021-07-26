@@ -70,10 +70,11 @@ def save(filename, bgs, stds):
 def plot_spectrums():
 
 	directions = ["001", "100"]
-	d = 0.35
+	bz_direction = ["\Gamma Z", "\Gamma X"]
+	d = -0.35
 
 	fig, ax = plt.subplots(nrows=1, ncols=2)
-
+	ax[0].set_ylabel("Intensity [arb. units]", fontsize=14)
 	for i, direction in enumerate(directions):
 		filenames, bin_windows, trim_Es = read_config(f"spectrum_configs_{direction}.txt")
 
@@ -89,10 +90,13 @@ def plot_spectrums():
 			ax[i].plot(E, d*j+intensity, c="gray")
 			ax[i].plot(E, d*j+intensity_smooth, c="r")
 
+		ax[i].tick_params(axis='x', labelsize=12)
 		ax[i].set_yticklabels([])
 		ax[i].set_yticks([])
-		ax[i]
+		ax[i].set_xlabel("Energy loss [eV]", fontsize=14)
+		ax[i].set_title(f"{direction} direction " + rf"$({bz_direction[i]})$", fontsize=16)
 
+	fig.tight_layout()
 	plt.show()
 
 if __name__ == "__main__":
