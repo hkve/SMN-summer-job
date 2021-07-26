@@ -14,13 +14,6 @@ from plots import plot_bands_and_JDOS
 def func(E, bandgap, A):
 	return A*(E-bandgap)**(-0.5)
 
-def plot_func(E, bandgap, A):
-	intensity = np.zeros_like(E)
-
-	intensity[(E-bandgap)>0] = A*np.sqrt(E[(E-bandgap)>0]-bandgap)
-
-	return intensity
-
 def trim_data(trim, E, intensity):
 	start = np.argmin(abs(trim[0]-E))
 	end = np.argmin(abs(trim[1]-E))
@@ -78,9 +71,9 @@ def preform_fit(jdos):
 	ax.plot(E, J, lw=3, c="gray", label="Smoothed spectrum")
 	ax.plot(E_trim, func(E_trim, *fit_opt), c="r", lw=2, label="1D JDOS")
 	ax.set(ylim=(0,np.max(J)+0.05))
-	ax.set_xlabel("Energy difference [eV]", fontsize=12)
-	ax.set_ylabel("Normalized intensity [arb. units]", fontsize=12)
-	ax.legend(fontsize=12)
+	ax.set_xlabel("Energy difference [eV]", fontsize=16)
+	ax.set_ylabel("Normalized intensity [arb. units]", fontsize=16)
+	ax.legend(fontsize=14)
 	plt.show()
 
 jdos = preform_jdos(False)
