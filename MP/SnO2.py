@@ -15,15 +15,16 @@ from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS
 
 def jdos(bs, run=False):
 	direction = "\Gamma-Z"
-	k, v, c = get_bands(bs, direction, n_val=1,n_con=1)
+	k, v, c = get_bands(bs, direction, n_val=6,n_con=1)
 	bands = make_band_objects(k,v,c, interpolate=True, n_points=1500)
 
 	filename = "SnO_GZ"
 	jdos = JDOS()
 
 	if run:
+		k_max = np.max(k)
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2.5,10), q_init=(0,1.3), n_E=500, n_q=500)
+		jdos.run(E_init=(2.5,10), q_init=(-k_max,k_max), n_E=500, n_q=500)
 		jdos.save_data(filename)
 
 	else:
@@ -34,8 +35,8 @@ def jdos(bs, run=False):
 	d = direction.replace("-", " ")
 	title = rf"${d}$ direction"
 	Q, E, J = jdos.get_data()
-	#plot_JDOS(Q, E, J, JDOS_options={"smooth": 2.5, "title": title})
-	plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 3})
+	plot_JDOS(Q, E, J, JDOS_options={"smooth": 2.5, "title": title})
+	#plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 3})
 
 
 def plot_with_experimental(bs, direction, q_ranges,run=False): 
@@ -66,7 +67,7 @@ def plot_with_experimental(bs, direction, q_ranges,run=False):
 		
 		bands = make_band_objects(k,v,c,interpolate=True, n_points=3000)
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2,12), q_init=(0,q_max), n_E=1000, n_q=500)
+		jdos.run(E_init=(2.5,10), q_init=(0,q_max), n_E=1000, n_q=500)
 
 		jdos.save_data(filename)
 	else:
@@ -109,9 +110,11 @@ if __name__ == "__main__":
 	"""
 
 	""" 100
-	"""
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.4,0.5),(0.7,0.8),(0.9,1.0),(1.2,1.3)]
 	plot_with_experimental(bs, "100", q_ranges, run=False)
-	
+	"""
+
+	bs = bs.apply_scissor(3.6286753818126023)
+	jdos(bs, run=True)	
 
 

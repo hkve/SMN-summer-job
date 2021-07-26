@@ -32,32 +32,30 @@ def read_config(filename):
 	return filenames, bin_windows, trim_Es
 
 def fit_spectrums(filenames, bin_windows, trim_Es, plot=True):
-	show = [2]
+	show = [10]
 
 	bg = []
 	bg_std = []
 
 	for i in range(len(filenames)):
+		E, intensity = fit_spectrum.load_data(filenames[i])
 
-		if i in show:
-			E, intensity = fit_spectrum.load_data(filenames[i])
+		intensity = fit_spectrum.normalize(intensity)
+		intensity_smooth = fit_spectrum.savgol_smooth(intensity, bin_windows[i])
 
-			intensity = fit_spectrum.normalize(intensity)
-			intensity_smooth = fit_spectrum.savgol_smooth(intensity, bin_windows[i])
+		E_trim, intensity_trim, trim_idx = fit_spectrum.trim_data(trim_Es[i], E, intensity_smooth)
+		fit_opt, fit_cov = curve_fit(fit_spectrum.fit_1_2, E_trim, intensity_trim)
+		
+		bg.append(fit_opt[0])
+		bg_std.append(fit_cov[0,0])
 
-			E_trim, intensity_trim, trim_idx = fit_spectrum.trim_data(trim_Es[i], E, intensity_smooth)
-			fit_opt, fit_cov = curve_fit(fit_spectrum.fit_1_2, E_trim, intensity_trim)
-			
-			bg.append(fit_opt[0])
-			bg_std.append(fit_cov[0,0])
-
-			if plot:
-				print(f"{filenames[i]} ---> IDX = {i}")
-				fig, ax = plt.subplots()
-				ax.plot(E, intensity, c="gray")
-				ax.plot(E, intensity_smooth, c="r")
-				fit_spectrum.plot_fit(ax, fit_spectrum.plot_1_2, E, fit_opt, fit_cov, trim_idx, color="green")
-				plt.show()
+		if plot and i in show:
+			print(f"{filenames[i]} ---> IDX = {i}")
+			fig, ax = plt.subplots()
+			ax.plot(E, intensity, c="gray")
+			ax.plot(E, intensity_smooth, c="r")
+			fit_spectrum.plot_fit(ax, fit_spectrum.plot_1_2, E, fit_opt, fit_cov, trim_idx, color="green")
+			plt.show()
 
 	if not plot:
 		return np.array(bg), np.array(bg_std)
@@ -78,7 +76,7 @@ if __name__ == "__main__":
 	"""
 
 	""" 100
-	"""
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_100.txt")
-	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=True)
-	#save("100.txt", bg, bg_std)
+	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
+	save("100.txt", bg, bg_std)
+	"""
