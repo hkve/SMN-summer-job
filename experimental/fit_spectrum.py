@@ -73,9 +73,7 @@ def normalize(intensity):
 def savgol_smooth(intensity, window_length, order=2):
 	return savgol_filter(intensity, window_length=window_length, polyorder=order)
 
-
-
-if __name__ == "__main__":
+def plot_different_fits():
 	E, intensity = load_data("SnO2_data/Text files for 001 direction/0.0-0.1.msa")
 	
 	intensity = normalize(intensity)
@@ -101,3 +99,7 @@ if __name__ == "__main__":
 	ax[0].legend(fontsize=12)
 	ax[1].legend(loc=2, fontsize=12)
 	plt.show()
+
+
+if __name__ == "__main__":
+	plot_different_fits()

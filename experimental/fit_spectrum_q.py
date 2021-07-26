@@ -67,7 +67,36 @@ def save(filename, bgs, stds):
 		for bg, std in zip(bgs, stds):
 			file.write(f"{bg},{std}\n")
 
+def plot_spectrums():
+
+	directions = ["001", "100"]
+	d = 0.35
+
+	fig, ax = plt.subplots(nrows=1, ncols=2)
+
+	for i, direction in enumerate(directions):
+		filenames, bin_windows, trim_Es = read_config(f"spectrum_configs_{direction}.txt")
+
+		for j in range(len(filenames)):
+			E, intensity = fit_spectrum.load_data(filenames[j])
+
+			intensity = fit_spectrum.normalize(intensity)
+			intensity_smooth = fit_spectrum.savgol_smooth(intensity, bin_windows[j])
+			
+			E_trim, intensity_trim, trim_idx = fit_spectrum.trim_data(trim_Es[j], E, intensity_smooth)
+			fit_opt, fit_cov = curve_fit(fit_spectrum.fit_1_2, E_trim, intensity_trim)
+
+			ax[i].plot(E, d*j+intensity, c="gray")
+			ax[i].plot(E, d*j+intensity_smooth, c="r")
+
+		ax[i].set_yticklabels([])
+		ax[i].set_yticks([])
+		ax[i]
+
+	plt.show()
+
 if __name__ == "__main__":
+	plot_spectrums()
 	# 001
 	"""
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_001.txt")

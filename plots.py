@@ -87,22 +87,28 @@ def plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={}, band_options={}):
 
 	J_max, J_min, n_levels = get_levels(J)
 
-	fig = plt.figure(constrained_layout=True)
-	spec = gridspec.GridSpec(nrows=1, ncols=2, width_ratios=[1.5,1], figure=fig)
+	fig = plt.figure(constrained_layout=True, figsize=(10,6))
+	spec = gridspec.GridSpec(nrows=1, ncols=2, width_ratios=[1,0.4], figure=fig)
 	ax1 = fig.add_subplot(spec[0])
 	ax2 = fig.add_subplot(spec[1])
 
 	cf = ax1.contourf(Q, E, J, levels=np.linspace(J_min, J_max+1, n_levels, dtype=np.int))
-	fig.colorbar(cf, ax=ax1)
+	cbar = fig.colorbar(cf, ax=ax1)
+	cbar.ax.tick_params(labelsize=12) 
 
-	ax1.set_xlabel(rf"${xlab}$"+" "+r"$[Å^{-1}]$", fontsize=12)
-	ax1.set_ylabel(r"Energy difference E [eV]", fontsize=12)
+	ax1.set_xlabel(rf"${xlab}$"+" "+r"$[Å^{-1}]$", fontsize=20)
+	ax1.set_ylabel(r"Energy difference [eV]", fontsize=20)
+	ax1.tick_params(axis='x', labelsize=14)
+	ax1.tick_params(axis='y', labelsize=14)
 
 	for band in bands:
 		ax2.plot(band.k, band.E, c="b")
 
-	ax2.set_xlabel(r"$k$"+" "+r"$[Å^{-1}]}$", fontsize=12)
-	ax2.set_ylabel(r"$E(k)$"+" "+"[eV]", fontsize=12)
+	ax2.set_xlabel(r"$k$"+" "+r"$[Å^{-1}]}$", fontsize=20)
+	ax2.set_ylabel(r"$\epsilon(k)$"+" "+"[eV]", fontsize=20)
+	ax2.tick_params(axis='x', labelsize=14)
+	ax2.tick_params(axis='y', labelsize=14)
+
 	ax2.grid()
 
 

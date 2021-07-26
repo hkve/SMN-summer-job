@@ -17,8 +17,8 @@ def symmetric_parabolic_direct_gap(run=False):
 	if run:
 		c = Band("c")
 		v = Band("v")
-		c.parabolic(effective_mass=0.5, E0=1, k_init=(0,1,3000), k0=0.5)
-		v.parabolic(effective_mass=0.5, E0=0, k_init=(0,1,3000), k0=0.5)
+		c.parabolic(effective_mass=0.5, E0=1, k_init=(-0.5,1.5,3000), k0=0.5)
+		v.parabolic(effective_mass=0.5, E0=0, k_init=(-0.5,1.5,3000), k0=0.5)
 
 		bands = [c,v]
 		jdos.set_bands(bands)
@@ -30,9 +30,9 @@ def symmetric_parabolic_direct_gap(run=False):
 		
 	#jdos.map_to_abs()
 	#plot_integrated_density(*jdos.integrated_density())
+	print(jdos)
 	Q, E, J = jdos.get_data()
-	plot_integrated_density(*jdos.integrated_density())
-	#plot_bands_and_JDOS(Q, E, J, jdos.get_bands(), JDOS_options={"smooth": 1})
+	plot_bands_and_JDOS(Q, E, J, jdos.get_bands(), JDOS_options={"smooth": [1,2]}, band_options={"xlim": (0,1), "ylim": (-2,3)})
 
 def symmetric_indirect_gap(run=False):
 	"""
@@ -158,8 +158,8 @@ def multiple_bands(run=False):
 	
 
 
-#symmetric_parabolic_direct_gap(run=False)
+symmetric_parabolic_direct_gap(run=False)
 #symmetric_indirect_gap(run=True)
 #non_parabolic_direct_gap(run=True)
-flat_bands(run=True)
+#flat_bands(run=True)
 #multiple_bands(run=True)

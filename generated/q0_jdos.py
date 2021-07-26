@@ -11,8 +11,8 @@ from JDOS import JDOS
 from band import Band
 from plots import plot_bands_and_JDOS
 
-def func(E, bandgap, A):
-	return A*(E-bandgap)**(-0.5)
+def func(E, bandgap, A, n):
+	return A*(E-bandgap)**(n)
 
 def trim_data(trim, E, intensity):
 	start = np.argmin(abs(trim[0]-E))
