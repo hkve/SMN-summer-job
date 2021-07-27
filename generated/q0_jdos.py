@@ -11,8 +11,8 @@ from JDOS import JDOS
 from band import Band
 from plots import plot_bands_and_JDOS
 
-def func(E, bandgap, A, n):
-	return A*(E-bandgap)**(n)
+def func(E, bandgap, A):
+	return A*(E-bandgap)**(-0.5)
 
 def trim_data(trim, E, intensity):
 	start = np.argmin(abs(trim[0]-E))
@@ -33,14 +33,14 @@ def preform_jdos(run=False):
 		c = Band("c")
 		v = Band("v")
 
-		k_init = (-0.5,1.5,3000)
-		c.parabolic(effective_mass=0.5, E0=1, k_init=k_init, k0=0.5)
-		v.parabolic(effective_mass=0.5, E0=0, k_init=k_init, k0=0.5)
+		k_init = (-0.2,1.4,3000)
+		c.parabolic(effective_mass=0.5, E0=1, k_init=k_init, k0=0.8)
+		v.parabolic(effective_mass=0.5, E0=0, k_init=k_init, k0=0.4)
 
 		bands = [c,v]
 
 		jdos.set_bands(bands)
-		jdos.run(E_init=(0,7), q_init=(-1,1), n_E=1000, n_q=1000)
+		jdos.run(E_init=(0,7), q_init=(-1.6,1.6), n_E=1000, n_q=1000)
 
 		jdos.save_data(filename, bands=True)
 
@@ -50,10 +50,13 @@ def preform_jdos(run=False):
 	return jdos
 
 def preform_fit(jdos):
-	jdos.map_to_abs()
+	#jdos.map_to_abs()
 	#jdos.J_grid = JDOS_preprocessing(jdos.J_grid, {"smooth": 2})
 	Q, E, J = jdos.get_data()
-	E, J = E[:,0], J[:,0]
+	q_bg = 0.4
+	q_bg_idx = np.argmin(abs(Q[0,:]-q_bg))
+
+	E, J = E[:,0], J[:,q_bg_idx]
 	J[0] *= 2
 
 	print(jdos)
@@ -63,7 +66,7 @@ def preform_fit(jdos):
 	fig, ax = plt.subplots()
 
 	dE = E[1]-E[0]
-	E_trim, J_trim, trim_idx = trim_data((1+dE, 7-dE), E, J)
+	E_trim, J_trim, trim_idx = trim_data((1+dE, 6.4-dE), E, J)
 	fit_opt, fit_cov = curve_fit(func, E_trim, J_trim)
 
 	print(fit_opt, np.diag(fit_cov))
