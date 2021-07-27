@@ -110,11 +110,9 @@ if __name__ == "__main__":
 	"""
 
 	""" 100
-	"""
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.4,0.5),(0.7,0.8),(0.9,1.0),(1.2,1.3)]
 	plot_with_experimental(bs, "100", q_ranges, run=False)
 	"""
 	bs = bs.apply_scissor(3.6286753818126023)
-	jdos(bs, run=True)	
-	"""
+	plot_bandstructure(bs, title=r"r-SnO$_2$ band structure")	
 

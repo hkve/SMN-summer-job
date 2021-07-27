@@ -9,6 +9,8 @@ def plot_brillouin(bs):
 def plot_bandstructure(bs, title=""):
 	bsplot = BSPlotter(bs)
 	bsplot.get_plot()
+	
+	#fig.set_size_inches(18.5, 10.5)
 
 	ax = plt.gca()
 	ax.set_title(title, fontsize=24)
@@ -30,4 +32,4 @@ if __name__ == "__main__":
 	#print(bs_ZnO.structure)
 	
 	#plot_brillouin(bs_ZnO)
-	#plot_bandstructure(bs_SnO2)
+	
