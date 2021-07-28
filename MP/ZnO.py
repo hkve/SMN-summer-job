@@ -1,6 +1,7 @@
 from get_structure import load_structure
 from get_bands import get_bands
 from plot_structure import plot_brillouin, plot_bandstructure
+import numpy as np
 
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -10,16 +11,17 @@ from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS
 
 def jdos(bs, run=False):
 	print("Not stuck")
-	direction = "\Gamma-A"
+	direction = "K-\Gamma"
 	k, v, c = get_bands(bs, direction, n_val=8,n_con=1)
-	bands = make_band_objects(k,v,c, interpolate=True, n_points=1500)
+	bands = make_band_objects(k,v,c, interpolate=True, n_points=3000)
 
-	filename = "ZnO_GA"
+	filename = "ZnO_KG"
 	jdos = JDOS()
 
 	if run:
+		k_max = np.max(k)
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2.5,10), q_init=(-0.6,0.6), n_E=500, n_q=500)# <- \Gamma-A
+		jdos.run(E_init=(2.5,10), q_init=(-k_max,k_max), n_E=500, n_q=500)# <- \Gamma-A
 		#jdos.run(E_init=(2.5,10), q_init=(-1.3,1.3), n_E=500, n_q=500) #<- K-\Gamma
 		jdos.save_data(filename)
 
@@ -41,6 +43,6 @@ if __name__ == "__main__":
 	bs = bs.apply_scissor(3.37)
 	
 
-	#jdos(bs, run=True)
+	jdos(bs, run=True)
 	#plot_brillouin(bs)
-	plot_bandstructure(bs, title="ZnO band structure")
+	#plot_bandstructure(bs, title="ZnO band structure")

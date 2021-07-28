@@ -92,11 +92,20 @@ def plot_with_experimental(bs, direction, q_ranges,run=False):
 	k_mids = [r[0]+0.5*(r[1]-r[0]) for r in q_ranges]
 	fig, ax = plt.subplots()
 	
-	ax.scatter(k_mids, bg_dft, label="dft")
-	ax.scatter(k_mids, bg_exp, label="exp")	
-	ax.set_xticks(np.arange(0,k_mids[-1]+0.15,0.1))
-	ax.legend()
+	ax.scatter(k_mids, bg_dft, label="Fitted DFT energies")
+	ax.scatter(k_mids, bg_exp, label="Fitted EELS energies")	
 	
+	ax.set_xlabel(r"q " + r"$[Å^{-1}]$", fontsize=14)
+	ax.set_xticks(np.arange(0,k_mids[-1]+0.15,0.1))
+	ax.tick_params(axis='x', labelsize=13)
+	
+	ax.set_ylabel(r"Energy difference [eV]", fontsize=14)
+	ax.tick_params(axis='y', labelsize=13)
+	
+	sym_dir = sym_dir.replace("-", " ")
+	ax.set_title(rf"{direction} direction (${sym_dir}$)", fontsize=15)
+	ax.legend(fontsize=13)
+	plt.tight_layout()
 	plt.show()
 
 
@@ -104,19 +113,19 @@ if __name__ == "__main__":
 	print("not stuck")
 	bs = load_structure("data/SnO2.json")
 	
-	bs = bs.apply_scissor(3.6286753818126023)
 	""" 001
+	bs = bs.apply_scissor(3.6286753818126023)
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.3,0.4),(0.5,0.6),(0.7,0.8),(0.9,1.0)]
-	plot_with_experimental(bs, "001", False)
+	plot_with_experimental(bs, "001", q_ranges, False)
 	"""
 
-	""" 100
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.4,0.5),(0.7,0.8),(0.9,1.0),(1.2,1.3)]
 	plot_with_experimental(bs, "100", q_ranges, run=False)
+	""" 100
 	"""
 
 	""" bs
 	plot_bandstructure(bs, title=r"r-SnO$_2$ band structure")	
 	"""
 
-	jdos(bs, run=False)
+	#jdos(bs, run=False)
