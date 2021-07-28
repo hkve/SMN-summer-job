@@ -99,15 +99,43 @@ def plot_spectrums():
 	fig.tight_layout()
 	plt.show()
 
+def get_sci(num):
+	num_str = f"{num:.2e}"
+	mantissa, exponent = num_str.split("e")
+	exponent = int(exponent)
+	
+	return mantissa, exponent
+
+def make_table(filenames, E_trims, bg, bg_std):
+	print(r"\begin{table}")
+	print(r"\centering")
+	print(r"\begin{tabular}{r|ccc}")
+	print(r"\toprule $q$ [\AAinv] & $E_{int}$ [eV] & $E_g$ [eV] & $\sigma_E^2$ [eV$^2$] \\")
+	print(r"\midrule")
+	for i in range(len(filenames)):
+		q_range = filenames[i].split("/")[-1].replace(".msa", " ")
+		E_int = E_trims[i][1] - E_trims[i][0]
+		E_g = bg[i]
+		var = bg_std[i]
+
+		var_man, var_exp = get_sci(var)
+		
+		print(rf"{q_range} & {E_int:.2f} & {E_g:.2f} & ${var_man} \cdot 10^" + r"{" + rf"{var_exp}" + r"}" + r"$ \\")
+
+	print(r"\bottomrule")
+	print(r"\end{tabular}")
+	print(r"\caption{}")
+	print(r"\label{}")
+	print(r"\end{table}")
+
 if __name__ == "__main__":
-	plot_spectrums()
 	# 001
 	"""
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_001.txt")
 	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
 	save("001.txt", bg, bg_std)
 	"""
-
+	
 	""" 100
 	filenames, bin_windows, trim_Es = read_config("spectrum_configs_100.txt")
 	bg, bg_std = fit_spectrums(filenames, bin_windows, trim_Es, plot=False)
