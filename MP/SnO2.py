@@ -15,8 +15,8 @@ from plots import plot_bands, plot_JDOS, plot_bands_and_JDOS
 
 def jdos(bs, run=False):
 	direction = "\Gamma-Z"
-	k, v, c = get_bands(bs, direction, n_val=6,n_con=1)
-	bands = make_band_objects(k,v,c, interpolate=True, n_points=1500)
+	k, v, c = get_bands(bs, direction, n_val=8,n_con=1)
+	bands = make_band_objects(k,v,c, interpolate=True, n_points=3000)
 
 	filename = "SnO_GZ"
 	jdos = JDOS()
@@ -104,6 +104,7 @@ if __name__ == "__main__":
 	print("not stuck")
 	bs = load_structure("data/SnO2.json")
 	
+	bs = bs.apply_scissor(3.6286753818126023)
 	""" 001
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.3,0.4),(0.5,0.6),(0.7,0.8),(0.9,1.0)]
 	plot_with_experimental(bs, "001", False)
@@ -113,6 +114,9 @@ if __name__ == "__main__":
 	q_ranges = [(0,0.1),(0.1,0.2),(0.2,0.3),(0.4,0.5),(0.7,0.8),(0.9,1.0),(1.2,1.3)]
 	plot_with_experimental(bs, "100", q_ranges, run=False)
 	"""
-	bs = bs.apply_scissor(3.6286753818126023)
-	plot_bandstructure(bs, title=r"r-SnO$_2$ band structure")	
 
+	""" bs
+	plot_bandstructure(bs, title=r"r-SnO$_2$ band structure")	
+	"""
+
+	jdos(bs, run=False)

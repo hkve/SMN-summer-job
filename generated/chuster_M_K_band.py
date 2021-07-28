@@ -19,7 +19,7 @@ def add_noise(bands, sigma):
 		band.add_gaussian_noice(sigma)
 
 def plot_schuster_M_K(run=False):
-	filename = "schuster_M_K_deg_test"
+	filename = "schuster_M_K_random_sample"
 
 	# schuster_M_K_random_sample -> high energy and momentum res with 3000 points for each band
 	# schuster_M_K -> 
@@ -36,7 +36,7 @@ def plot_schuster_M_K(run=False):
 		#add_noise(bands, 0.1)
 
 		jdos.set_bands(bands)
-		jdos.run(E_init=(5.9, 8), n_E=200, q_init=(-0.9,0.9), n_q = 20)
+		jdos.run(E_init=(5.9, 8), n_E=500, q_init=(-0.9,0.9), n_q = 500)
 
 		jdos.save_data(filename, bands=True)
 	else:
@@ -50,14 +50,16 @@ def plot_schuster_M_K(run=False):
 	print(jdos)
 	
 	#plot_waterfall(Q, E, J, [0.1,0.5,0.7])
-	#plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
-	plot_integrated_density(*jdos.integrated_density())
+	plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
+	#plot_integrated_density(*jdos.integrated_density())
 
 
 if __name__ == "__main__":
-	from band_gap_generator import Band
+	import sys, os
+	sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+	from band import Band
 	from JDOS import JDOS
 
 	from plots import plot_bands_and_JDOS, plot_JDOS, plot_bands, plot_integrated_density, plot_waterfall
 
-	plot_schuster_M_K(run=False) 
+	plot_schuster_M_K(run=True) 
