@@ -137,15 +137,15 @@ def multiple_bands(run=False):
 		v1 = Band("v")
 		v2 = Band("v")
 
-		k_init = (0,1,1000)
-		c1.parabolic(E0=3, k_init=k_init, k0=0, effective_mass=0.5)
-		v1.parabolic(E0=0, k_init=k_init, k0=0, effective_mass=2)
-		v2.non_parabolic(E0=-0.2, k_init=k_init, k0=0.2, effective_mass=2, alpha=2)
+		k_init = (-0.2,1.2,3000)
+		c1.parabolic(E0=1, k_init=k_init, k0=0.5, effective_mass=0.5)
+		v1.parabolic(E0=0, k_init=k_init, k0=0.5, effective_mass=0.5)
+		v2.non_parabolic(E0=-0.2, k_init=k_init, k0=0.4, effective_mass=0.75, alpha=0.5)
 
 		bands = [c1, v1, v2]
-	
+		
 		jdos.set_bands(bands)
-		jdos.run(E_init=(2.5,10), q_init=(-1,1), n_E=500, n_q=500)
+		jdos.run(E_init=(0,7), q_init=(-1.4,1.4), n_E=500, n_q=500)
 
 		jdos.save_data(filename, bands=True)
 	else:
@@ -155,7 +155,7 @@ def multiple_bands(run=False):
 	
 	print(jdos)
 	jdos.map_to_abs()
-	plot_bands_and_JDOS(Q, E, J, jdos.get_bands(), JDOS_options={"smooth": [1,1]}, band_options={"ylim": (-2,5),"xlim": (0,1)})
+	plot_bands_and_JDOS(Q, E, J, jdos.get_bands(), JDOS_options={"smooth": [1,1]}, band_options={"ylim": (-2,2),"xlim": (-0.2,1.2)})
 	
 
 
@@ -163,4 +163,4 @@ def multiple_bands(run=False):
 #symmetric_indirect_gap(run=False)
 #non_parabolic_direct_gap(run=True)
 #flat_bands(run=True)
-multiple_bands(run=True)
+multiple_bands(run=False)
