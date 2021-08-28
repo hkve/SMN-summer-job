@@ -32,7 +32,7 @@ def plot_schuster_M_K(run=False):
 
 		bands = con_bands + val_bands
 
-		interpolate_bands(bands, 1000, random=True)
+		interpolate_bands(bands, 3000, random=True)
 		#add_noise(bands, 0.1)
 
 		jdos.set_bands(bands)
@@ -50,7 +50,7 @@ def plot_schuster_M_K(run=False):
 	print(jdos)
 	
 	#plot_waterfall(Q, E, J, [0.1,0.5,0.7])
-	plot_bands_and_JDOS(Q, E, J, bands, JDOS_options={"smooth": 1})
+	plot_JDOS(Q, E, J,JDOS_options={"smooth": 1})
 	#plot_integrated_density(*jdos.integrated_density())
 
 
@@ -62,4 +62,4 @@ if __name__ == "__main__":
 
 	from plots import plot_bands_and_JDOS, plot_JDOS, plot_bands, plot_integrated_density, plot_waterfall
 
-	plot_schuster_M_K(run=True) 
+	plot_schuster_M_K(run=False) 
